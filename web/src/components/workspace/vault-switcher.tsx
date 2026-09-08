@@ -34,10 +34,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { vaultApi } from "@/lib/api/endpoints";
 import type { Vault } from "@/lib/api/types";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 
 export function VaultSwitcher({ vaultId, vaultName }: { vaultId: string; vaultName: string }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { data: vaults } = useQuery({ queryKey: ["vaults"], queryFn: vaultApi.list });
   const openSettings = useWorkspaceStore((s) => s.openSettings);
@@ -56,7 +58,7 @@ export function VaultSwitcher({ vaultId, vaultName }: { vaultId: string; vaultNa
           <button
             type="button"
             data-tour="vault"
-            aria-label={`Vault: ${vaultName}. Switch vault`}
+            aria-label={t("vaultSwitcher.currentVaultLabel", { name: vaultName })}
             className="ml-auto flex min-w-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] font-medium tracking-wide text-ob-faint uppercase hover:bg-ob-hover hover:text-ob-text"
           >
             <span className="truncate">{vaultName}</span>
@@ -65,7 +67,7 @@ export function VaultSwitcher({ vaultId, vaultName }: { vaultId: string; vaultNa
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-60">
           <DropdownMenuLabel className="text-[11px] tracking-wide text-ob-faint uppercase">
-            Vaults
+            {t("vaultSwitcher.vaults")}
           </DropdownMenuLabel>
           {(vaults ?? []).map((v) => (
             <VaultRow key={v.id} vault={v} current={v.id === vaultId} />
@@ -73,11 +75,11 @@ export function VaultSwitcher({ vaultId, vaultName }: { vaultId: string; vaultNa
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => setCreating(true)}>
             <Plus className="mr-2 size-3.5 shrink-0" strokeWidth={2} />
-            New vault…
+            {t("vaultSwitcher.newVault")}
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => openSettings("Vault")}>
             <Settings2 className="mr-2 size-3.5 shrink-0" strokeWidth={2} />
-            Manage vaults…
+            {t("vaultSwitcher.manageVaults")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -115,6 +117,7 @@ export function NewVaultDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.push);
   const [name, setName] = useState("");
@@ -125,9 +128,9 @@ export function NewVaultDialog({
     onSuccess: (vault) => {
       setCreated(vault);
       void queryClient.invalidateQueries({ queryKey: ["vaults"] });
-      toast(`Vault "${vault.name}" created.`, "info");
+      toast(t("vaultSwitcher.toast.vaultCreated", { name: vault.name }), "info");
     },
-    onError: (e) => toastError(e, "Could not create the vault."),
+    onError: (e) => toastError(e, t("vaultSwitcher.toast.createFailed")),
   });
 
   const close = (next: boolean) => {
@@ -143,11 +146,11 @@ export function NewVaultDialog({
     <Dialog open={open} onOpenChange={close}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{created ? "Vault created" : "New vault"}</DialogTitle>
+          <DialogTitle>{created ? t("vaultSwitcher.newVaultDialog.titleCreated") : t("vaultSwitcher.newVaultDialog.title")}</DialogTitle>
           <DialogDescription>
             {created
-              ? "A vault is a separate workspace — notes, folders, tags and graph of its own."
-              : "It starts empty. Nothing is shared with your other vaults."}
+              ? t("vaultSwitcher.newVaultDialog.descriptionCreated")
+              : t("vaultSwitcher.newVaultDialog.description")}
           </DialogDescription>
         </DialogHeader>
         {created ? (

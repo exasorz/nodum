@@ -7,6 +7,7 @@ import { SlidersHorizontal, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { searchApi } from "@/lib/api/endpoints";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 export function SearchPane({
@@ -16,6 +17,7 @@ export function SearchPane({
   vaultId: string;
   onOpenNote: (noteId: string, title: string) => void;
 }) {
+  const { t } = useTranslation();
   const searchSeed = useWorkspaceStore((s) => s.searchSeed);
   const [query, setQuery] = useState(searchSeed ?? "");
   const [debounced, setDebounced] = useState(searchSeed ?? "");
@@ -63,13 +65,13 @@ export function SearchPane({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search… (path: file: tag:)"
-            aria-label="Search notes"
+            placeholder={t("search.placeholder")}
+            aria-label={t("search.aria.searchNotes")}
             className="h-7 w-full bg-transparent text-[13px] text-ob-text outline-none placeholder:text-ob-faint"
           />
           <button
             type="button"
-            aria-label="Search filters"
+            aria-label={t("search.aria.filters")}
             aria-pressed={showFilters}
             onClick={() => setShowFilters((v) => !v)}
             className={
@@ -85,29 +87,29 @@ export function SearchPane({
         {showFilters && (
           <div className="mt-2 space-y-2 rounded-md border border-ob-border bg-ob-bg p-2">
             <label className="flex items-center justify-between gap-2 text-[12px] text-ob-muted">
-              Sort by
+              {t("search.sortBy")}
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as typeof sort)}
-                aria-label="Sort results"
+                aria-label={t("search.aria.sortResults")}
                 className="rounded border border-ob-border bg-ob-sidebar px-1.5 py-0.5 text-[12px] text-ob-text outline-none"
               >
-                <option value="relevance">Relevance</option>
-                <option value="updated">Modified (newest)</option>
-                <option value="created">Created (newest)</option>
-                <option value="title">Title (A–Z)</option>
+                <option value="relevance">{t("search.relevance")}</option>
+                <option value="updated">{t("search.modifiedNewest")}</option>
+                <option value="created">{t("search.createdNewest")}</option>
+                <option value="title">{t("search.titleAz")}</option>
               </select>
             </label>
             <label className="flex items-center justify-between gap-2 text-[12px] text-ob-muted">
-              Date field
+              {t("search.dateField")}
               <select
                 value={dateField}
                 onChange={(e) => setDateField(e.target.value as typeof dateField)}
-                aria-label="Date field"
+                aria-label={t("search.aria.dateField")}
                 className="rounded border border-ob-border bg-ob-sidebar px-1.5 py-0.5 text-[12px] text-ob-text outline-none"
               >
-                <option value="updated">Modified</option>
-                <option value="created">Created</option>
+                <option value="updated">{t("search.modified")}</option>
+                <option value="created">{t("search.created")}</option>
               </select>
             </label>
             <div className="flex items-center gap-1.5 text-[12px] text-ob-muted">
@@ -115,7 +117,7 @@ export function SearchPane({
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                aria-label="From date"
+                aria-label={t("search.aria.fromDate")}
                 className="min-w-0 flex-1 rounded border border-ob-border bg-ob-sidebar px-1.5 py-0.5 text-[12px] text-ob-text outline-none"
               />
               <span className="text-ob-faint">→</span>
@@ -123,7 +125,7 @@ export function SearchPane({
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                aria-label="To date"
+                aria-label={t("search.aria.toDate")}
                 className="min-w-0 flex-1 rounded border border-ob-border bg-ob-sidebar px-1.5 py-0.5 text-[12px] text-ob-text outline-none"
               />
             </div>
@@ -133,17 +135,12 @@ export function SearchPane({
       <div className="flex-1 overflow-y-auto px-2 pb-4">
         {trimmed.length === 0 ? (
           <p className="px-2 py-1 text-[12px] text-ob-faint">
-            Operators: <code className="text-ob-muted">path:</code>{" "}
-            <code className="text-ob-muted">file:</code> <code className="text-ob-muted">tag:</code>{" "}
-            <code className="text-ob-muted">created:2026-08-01..2026-08-12</code>{" "}
-            <code className="text-ob-muted">updated:&gt;2026-08-01</code>{" "}
-            <code className="text-ob-muted">&quot;phrase&quot;</code>{" "}
-            <code className="text-ob-muted">-exclude</code>
+            {t("search.helpOperators", { operators: "path: file: tag: created:2026-08-01..2026-08-12 updated:>2026-08-01 \"phrase\" -exclude" })}
           </p>
         ) : isFetching && !data ? (
-          <p className="px-2 py-1 text-[13px] text-ob-faint">Searching…</p>
+          <p className="px-2 py-1 text-[13px] text-ob-faint">{t("common.searching")}</p>
         ) : data && data.results.length === 0 ? (
-          <p className="px-2 py-1 text-[13px] text-ob-faint">No results.</p>
+          <p className="px-2 py-1 text-[13px] text-ob-faint">{t("common.noResults")}</p>
         ) : (
           data?.results.map((r) => (
             <button
@@ -161,7 +158,7 @@ export function SearchPane({
                 dangerouslySetInnerHTML={{ __html: sanitizeSnippet(r.snippet) }}
               />
               <span className="mt-0.5 block text-[10px] text-ob-faint">
-                Modified {new Date(r.updated_at).toLocaleDateString()}
+                {t("search.modifiedDate", { date: new Date(r.updated_at).toLocaleDateString() })}
               </span>
             </button>
           ))

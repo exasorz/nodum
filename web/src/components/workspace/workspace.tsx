@@ -15,9 +15,10 @@ const GraphView = dynamic(
 );
 
 function GraphLoading() {
+  const { t } = useTranslation();
   return (
     <div className="flex h-full items-center justify-center text-[13px] text-ob-faint">
-      Loading graph…
+      {t("workspace.loadingGraph")}
     </div>
   );
 }
@@ -51,9 +52,11 @@ import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import { resolveNewNoteFolder } from "@/lib/new-note-location";
 import { usePlugins } from "@/lib/plugins/use-plugins";
 import { useDocumentTitle } from "@/lib/hooks/use-document-title";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 export function Workspace({ vault }: { vault: Vault }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const panes = useWorkspaceStore((s) => s.panes);
   const activePane = useWorkspaceStore((s) => s.activePane);

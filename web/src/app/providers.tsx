@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { I18nProvider } from "@/lib/i18n";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -51,7 +52,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+      <I18nProvider>
+        <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
 }

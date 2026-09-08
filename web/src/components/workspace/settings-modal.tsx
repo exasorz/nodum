@@ -28,6 +28,8 @@ import { Label } from "@/components/ui/label";
 import { authApi, siteApi, vaultApi } from "@/lib/api/endpoints";
 import { APP_VERSION, DOCS_URL, HELP_URL } from "@/lib/app-meta";
 import { filterHotkeys, HOTKEY_SECTIONS } from "@/lib/hotkeys";
+import { useTranslation } from "@/lib/i18n";
+import { LanguageSelector } from "./language-selector";
 import {
   FONT_CHOICES,
   useEditorSettings,
@@ -60,6 +62,24 @@ const TABS = [
 ] as const;
 type SettingsTab = (typeof TABS)[number];
 
+const TAB_LABELS: Record<SettingsTab, string> = {
+  General: "settings.tabs.general",
+  Editor: "settings.tabs.editor",
+  Appearance: "settings.tabs.appearance",
+  Interface: "settings.tabs.interface",
+  "Files & links": "settings.tabs.filesAndLinks",
+  Hotkeys: "settings.tabs.hotkeys",
+  Vault: "settings.tabs.vault",
+  Canvas: "settings.tabs.canvas",
+  Plugins: "settings.tabs.plugins",
+  AI: "settings.tabs.ai",
+  MCP: "settings.tabs.mcp",
+  "API keys": "settings.tabs.apiKeys",
+  "Web Clipper": "settings.tabs.webClipper",
+  Publish: "settings.tabs.publish",
+  Collab: "settings.tabs.collab",
+};
+
 interface SettingsModalProps {
   vaultId: string;
   open: boolean;
@@ -67,6 +87,7 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
@@ -103,9 +124,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
   const saveProfile = useMutation({
     mutationFn: () => authApi.updateMe({ name: name ?? undefined }),
     onSuccess: () => {
-      toast("Profile saved.", "info");
+      toast(t("settings.toast.profileSaved"), "info");
     },
-    onError: (e) => toastError(e, "Could not save profile."),
+    onError: (e) => toastError(e, t("settings.toast.saveProfileFailed")),
   });
 
   const { data: siteStatus } = useQuery({
@@ -120,9 +141,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["site-status", vaultId] });
-      toast("Site publishing updated.", "info");
+      toast(t("settings.toast.siteUpdated"), "info");
     },
-    onError: (e) => toastError(e, "Could not update site publishing."),
+    onError: (e) => toastError(e, t("settings.toast.siteUpdateFailed")),
   });
 
   const saveVault = useMutation({
@@ -138,9 +159,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["vaults"] });
       void queryClient.invalidateQueries({ queryKey: ["templates", vaultId] });
-      toast("Vault settings saved.", "info");
+      toast(t("settings.toast.vaultSaved"), "info");
     },
-    onError: (e) => toastError(e, "Could not save vault settings."),
+    onError: (e) => toastError(e, t("settings.toast.vaultSaveFailed")),
   });
 
   // Editor prefs save themselves on change (users.settings is shallow-merged).
@@ -155,11 +176,11 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     },
     onSuccess: (updated) => {
       setUser(updated);
-      toast("Editor settings saved.", "info");
+      toast(t("settings.toast.editorSaved"), "info");
     },
     onError: (e, _patch, ctx) => {
       if (ctx?.previous) setUser(ctx.previous);
-      toastError(e, "Could not save editor settings.");
+      toastError(e, t("settings.toast.editorSaveFailed"));
     },
   });
   // Slider drags fire per-step — debounce so one release = one PATCH
@@ -180,9 +201,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
       vaultApi.update(vaultId, { settings: { collabEnabled: enabled } }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["vaults"] });
-      toast("Collaboration setting saved.", "info");
+      toast(t("settings.toast.collabSaved"), "info");
     },
-    onError: (e) => toastError(e, "Could not update collaboration."),
+    onError: (e) => toastError(e, t("settings.toast.collabSaveFailed")),
   });
 
   // Files & links vault-level prefs — immediate patch saves
@@ -190,9 +211,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     mutationFn: (patch: Record<string, unknown>) => vaultApi.update(vaultId, { settings: patch }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["vaults"] });
-      toast("Vault settings saved.", "info");
+      toast(t("settings.toast.vaultSaved"), "info");
     },
-    onError: (e) => toastError(e, "Could not save vault settings."),
+    onError: (e) => toastError(e, t("settings.toast.vaultSaveFailed")),
   });
   const [newNoteFolderDraft, setNewNoteFolderDraft] = useState<string | null>(null);
   const newNoteFolderTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -245,9 +266,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     onSuccess: () => {
       setCurrentPw("");
       setNewPw("");
-      toast("Password changed — all sessions were logged out.", "info");
+      toast(t("settings.password.changedLogout"), "info");
     },
-    onError: (e) => toastError(e, "Could not change password."),
+    onError: (e) => toastError(e, t("settings.toast.vaultSaveFailed")),
   });
 
   return (
@@ -260,9 +281,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
     >
       <DialogContent className="gap-0 overflow-clip border-ob-border bg-ob-sidebar p-0 sm:max-w-[1040px]">
         <DialogHeader className="border-b border-ob-border px-5 pt-4 pb-3">
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>{t("settings.title")}</DialogTitle>
           <DialogDescription className="sr-only">
-            Account and vault configuration.
+            {t("settings.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -271,20 +292,20 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             aria-label="Settings sections"
             className="flex shrink-0 flex-row gap-0.5 overflow-x-auto border-b border-ob-border p-2 sm:w-44 sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:border-r sm:border-b-0"
           >
-            {TABS.map((t) => (
+            {TABS.map((tabValue) => (
               <button
-                key={t}
+                key={tabValue}
                 type="button"
-                aria-pressed={tab === t}
-                onClick={() => setTab(t)}
+                aria-pressed={tab === tabValue}
+                onClick={() => setTab(tabValue)}
                 className={cn(
                   "shrink-0 rounded-md px-2.5 py-1.5 text-left text-[13px] transition-colors duration-100",
-                  tab === t
+                  tab === tabValue
                     ? "bg-ob-active text-ob-text"
                     : "text-ob-muted hover:bg-ob-hover hover:text-ob-text",
                 )}
               >
-                {t}
+                {t(TAB_LABELS[tabValue])}
               </button>
             ))}
           </nav>
@@ -301,12 +322,14 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
               <>
                 <section className="space-y-2">
                   <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                    About
+                    {t("settings.sections.about")}
                   </h3>
                   <div className="flex items-center justify-between gap-4 text-[13px] text-ob-muted">
                     <span>
-                      Version {APP_VERSION}
-                      <span className="block text-[11px] text-ob-faint">nodum — open-source</span>
+                      {t("settings.about.version", { version: APP_VERSION })}
+                      <span className="block text-[11px] text-ob-faint">
+                        {t("settings.about.tagline")}
+                      </span>
                     </span>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -317,7 +340,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                         }}
                         className="rounded-md border border-ob-border px-2.5 py-1 text-[12px] text-ob-muted hover:text-ob-text"
                       >
-                        Show the tour again
+                        {t("settings.about.showTour")}
                       </button>
                       <a
                         href={DOCS_URL}
@@ -325,7 +348,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                         rel="noreferrer noopener"
                         className="rounded-md border border-ob-border px-2.5 py-1 text-[12px] text-ob-muted hover:text-ob-text"
                       >
-                        Documentation
+                        {t("settings.about.documentation")}
                       </a>
                       <a
                         href={HELP_URL}
@@ -333,7 +356,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                         rel="noreferrer noopener"
                         className="rounded-md border border-ob-border px-2.5 py-1 text-[12px] text-ob-muted hover:text-ob-text"
                       >
-                        GitHub
+                        {t("settings.about.github")}
                       </a>
                     </div>
                   </div>
@@ -341,33 +364,42 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
 
                 <section className="space-y-3 border-t border-ob-border pt-4">
                   <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                    Account
+                    {t("language.label")}
+                  </h3>
+                  <LanguageSelector />
+                </section>
+
+                <section className="space-y-3 border-t border-ob-border pt-4">
+                  <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
+                    {t("settings.sections.account")}
                   </h3>
                   <div className="space-y-2">
-                    <Label htmlFor="settings-name">Display name</Label>
+                    <Label htmlFor="settings-name">{t("settings.account.displayName")}</Label>
                     <Input
                       id="settings-name"
                       value={name ?? user?.name ?? ""}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
-                  <p className="text-[12px] text-ob-faint">Signed in as {user?.email}</p>
+                  <p className="text-[12px] text-ob-faint">
+                    {t("settings.account.signedInAs", { email: user?.email ?? "" })}
+                  </p>
                   <Button
                     size="sm"
                     onClick={() => saveProfile.mutate()}
                     disabled={saveProfile.isPending}
                   >
-                    Save profile
+                    {t("settings.account.saveProfile")}
                   </Button>
                 </section>
 
                 <section className="space-y-3 border-t border-ob-border pt-4">
                   <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                    Password
+                    {t("settings.sections.password")}
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
-                      <Label htmlFor="pw-current">Current</Label>
+                      <Label htmlFor="pw-current">{t("settings.password.current")}</Label>
                       <Input
                         id="pw-current"
                         type="password"
@@ -376,7 +408,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="pw-new">New (min 8)</Label>
+                      <Label htmlFor="pw-new">{t("settings.password.new")}</Label>
                       <Input
                         id="pw-new"
                         type="password"
@@ -391,7 +423,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     onClick={() => changePassword.mutate()}
                     disabled={changePassword.isPending || !currentPw || newPw.length < 8}
                   >
-                    Change password
+                    {t("settings.password.changePassword")}
                   </Button>
                 </section>
 
@@ -402,12 +434,12 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Editor" && (
               <section className="space-y-4">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Editor
+                  {t("settings.sections.editor")}
                 </h3>
 
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="default-view-mode" className="font-normal text-ob-muted">
-                    Default view for new tabs
+                    {t("settings.editor.defaultViewMode")}
                   </Label>
                   <select
                     id="default-view-mode"
@@ -419,27 +451,27 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     }
                     className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
                   >
-                    <option value="live">Live preview</option>
-                    <option value="source">Source mode</option>
-                    <option value="reading">Reading view</option>
+                    <option value="live">{t("settings.editor.viewModeLive")}</option>
+                    <option value="source">{t("settings.editor.viewModeSource")}</option>
+                    <option value="reading">{t("settings.editor.viewModeReading")}</option>
                   </select>
                 </div>
 
                 <SettingToggle
-                  label="Readable line length"
-                  hint="Limit the editing column to a comfortable width."
+                  label={t("settings.editor.readableLineLength")}
+                  hint={t("settings.editor.readableLineLengthHint")}
                   checked={editorSettings.readableLineLength}
                   onChange={(v) => saveEditorSettings.mutate({ readableLineLength: v })}
                 />
                 <SettingToggle
-                  label="Show line numbers"
-                  hint="Display a line-number gutter in the editor."
+                  label={t("settings.editor.showLineNumbers")}
+                  hint={t("settings.editor.showLineNumbersHint")}
                   checked={editorSettings.showLineNumbers}
                   onChange={(v) => saveEditorSettings.mutate({ showLineNumbers: v })}
                 />
                 <SettingToggle
-                  label="Spellcheck"
-                  hint="Underline misspelled words while editing."
+                  label={t("settings.editor.spellcheck")}
+                  hint={t("settings.editor.spellcheckHint")}
                   checked={editorSettings.spellcheck}
                   onChange={(v) => saveEditorSettings.mutate({ spellcheck: v })}
                 />
@@ -447,10 +479,10 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                 <div className="space-y-1">
                   <div className="flex items-center justify-between gap-4">
                     <Label htmlFor="editor-font-size" className="font-normal text-ob-muted">
-                      Editor font size
+                      {t("settings.editor.fontSize")}
                     </Label>
                     <span className="text-[12px] text-ob-faint">
-                      {fontSizeDraft ?? editorSettings.editorFontSize}px
+                      {t("settings.editor.fontSizeUnit", { size: fontSizeDraft ?? editorSettings.editorFontSize })}
                     </span>
                   </div>
                   <input
@@ -470,20 +502,20 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Appearance" && (
               <section className="space-y-4">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Appearance
+                  {t("settings.sections.appearance")}
                 </h3>
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="accent-color" className="font-normal text-ob-muted">
-                    Accent colour
+                    {t("settings.appearance.accentColor")}
                     <span className="block text-[11px] font-normal text-ob-faint">
-                      Used for buttons, links and highlights.
+                      {t("settings.appearance.accentColorHint")}
                     </span>
                   </Label>
                   <div className="flex items-center gap-2">
                     <input
                       id="accent-color"
                       type="color"
-                      aria-label="Accent colour"
+                      aria-label={t("settings.appearance.accentColor")}
                       value={accentDraft ?? userPrefs.accentColor ?? "#8b78e6"}
                       onChange={(e) => onAccentChange(e.target.value)}
                       className="h-7 w-10 cursor-pointer rounded border border-ob-border bg-transparent"
@@ -497,7 +529,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                           saveEditorSettings.mutate({ accentColor: null });
                         }}
                       >
-                        Reset
+                        {t("common.reset")}
                       </Button>
                     )}
                   </div>
@@ -505,9 +537,9 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
 
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="scheme" className="font-normal text-ob-muted">
-                    Colour scheme
+                    {t("settings.appearance.colorScheme")}
                     <span className="block text-[11px] font-normal text-ob-faint">
-                      Light theme is not available yet — nodum is dark-only.
+                      {t("settings.appearance.colorSchemeHint")}
                     </span>
                   </Label>
                   <select
@@ -516,25 +548,25 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     value="dark"
                     className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-faint"
                   >
-                    <option value="dark">Dark</option>
+                    <option value="dark">{t("settings.appearance.dark")}</option>
                   </select>
                 </div>
 
                 <FontSelect
                   id="font-interface"
-                  label="Interface font"
+                  label={t("settings.appearance.interfaceFont")}
                   value={userPrefs.fontInterface}
                   onChange={(v) => saveEditorSettings.mutate({ fontInterface: v })}
                 />
                 <FontSelect
                   id="font-text"
-                  label="Text font"
+                  label={t("settings.appearance.textFont")}
                   value={userPrefs.fontText}
                   onChange={(v) => saveEditorSettings.mutate({ fontText: v })}
                 />
                 <FontSelect
                   id="font-monospace"
-                  label="Monospace font"
+                  label={t("settings.appearance.monospaceFont")}
                   value={userPrefs.fontMonospace}
                   onChange={(v) => saveEditorSettings.mutate({ fontMonospace: v })}
                 />
@@ -544,17 +576,17 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Interface" && (
               <section className="space-y-4">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Interface
+                  {t("settings.sections.interface")}
                 </h3>
                 <SettingToggle
-                  label="Show ribbon"
-                  hint="The narrow icon strip on the far left."
+                  label={t("settings.interface.showRibbon")}
+                  hint={t("settings.interface.showRibbonHint")}
                   checked={userPrefs.showRibbon}
                   onChange={(v) => saveEditorSettings.mutate({ showRibbon: v })}
                 />
                 <SettingToggle
-                  label="Show tab title bar"
-                  hint="The row of tabs above each editor pane."
+                  label={t("settings.interface.showTabTitleBar")}
+                  hint={t("settings.interface.showTabTitleBarHint")}
                   checked={userPrefs.showTabTitleBar}
                   onChange={(v) => saveEditorSettings.mutate({ showTabTitleBar: v })}
                 />
@@ -564,12 +596,12 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Files & links" && (
               <section className="space-y-4">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Files &amp; links
+                  {t("settings.sections.filesAndLinks")}
                 </h3>
 
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="new-note-location" className="font-normal text-ob-muted">
-                    Default location for new notes
+                    {t("settings.filesAndLinks.newNoteLocation")}
                   </Label>
                   <select
                     id="new-note-location"
@@ -577,17 +609,17 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     onChange={(e) => saveVaultPatch.mutate({ newNoteLocation: e.target.value })}
                     className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
                   >
-                    <option value="root">Vault root</option>
-                    <option value="current">Same folder as current note</option>
-                    <option value="folder">In the folder specified below</option>
+                    <option value="root">{t("settings.filesAndLinks.locationRoot")}</option>
+                    <option value="current">{t("settings.filesAndLinks.locationCurrent")}</option>
+                    <option value="folder">{t("settings.filesAndLinks.locationFolder")}</option>
                   </select>
                 </div>
                 {((settings.newNoteLocation as string) ?? "root") === "folder" && (
                   <div className="space-y-2">
-                    <Label htmlFor="new-note-folder">New note folder</Label>
+                    <Label htmlFor="new-note-folder">{t("settings.filesAndLinks.newNoteFolder")}</Label>
                     <Input
                       id="new-note-folder"
-                      placeholder="Inbox"
+                      placeholder={t("settings.filesAndLinks.newNoteFolder")}
                       value={newNoteFolderDraft ?? (settings.newNoteFolder as string) ?? ""}
                       onChange={(e) => onNewNoteFolderChange(e.target.value)}
                     />
@@ -595,10 +627,10 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="attachment-folder">Attachment folder</Label>
+                  <Label htmlFor="attachment-folder">{t("settings.filesAndLinks.attachmentFolder")}</Label>
                   <Input
                     id="attachment-folder"
-                    placeholder="Attachments"
+                    placeholder={t("settings.filesAndLinks.attachmentFolder")}
                     value={attachmentDraft ?? vaultSettings.attachmentFolder}
                     onChange={(e) => onAttachmentFolderChange(e.target.value)}
                   />
@@ -606,7 +638,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
 
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="link-format" className="font-normal text-ob-muted">
-                    New link format
+                    {t("settings.filesAndLinks.linkFormat")}
                   </Label>
                   <select
                     id="link-format"
@@ -614,37 +646,37 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     onChange={(e) => saveVaultPatch.mutate({ linkFormat: e.target.value })}
                     className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
                   >
-                    <option value="shortest">Shortest path</option>
-                    <option value="relative">Relative path</option>
-                    <option value="absolute">Absolute path</option>
+                    <option value="shortest">{t("settings.filesAndLinks.linkFormatShortest")}</option>
+                    <option value="relative">{t("settings.filesAndLinks.linkFormatRelative")}</option>
+                    <option value="absolute">{t("settings.filesAndLinks.linkFormatAbsolute")}</option>
                   </select>
                 </div>
 
                 <SettingToggle
-                  label="Use [[Wikilinks]]"
-                  hint="Generate wikilinks instead of Markdown links."
+                  label={t("settings.filesAndLinks.useWikilinks")}
+                  hint={t("settings.filesAndLinks.useWikilinksHint")}
                   checked={vaultSettings.useWikilinks}
                   onChange={(v) => saveVaultPatch.mutate({ useWikilinks: v })}
                 />
                 <SettingToggle
-                  label="Confirm before deleting"
-                  hint="Ask for confirmation when deleting notes, folders and canvases."
+                  label={t("settings.filesAndLinks.confirmDelete")}
+                  hint={t("settings.filesAndLinks.confirmDeleteHint")}
                   checked={userPrefs.confirmDelete}
                   onChange={(v) => saveEditorSettings.mutate({ confirmDelete: v })}
                 />
                 <SettingToggle
-                  label="Page preview requires ⌘/Ctrl"
-                  hint="Only show the hover preview while the modifier key is held."
+                  label={t("settings.filesAndLinks.previewRequiresCmd")}
+                  hint={t("settings.filesAndLinks.previewRequiresCmdHint")}
                   checked={userPrefs.previewRequireCmd}
                   onChange={(v) => saveEditorSettings.mutate({ previewRequireCmd: v })}
                 />
 
                 <div className="space-y-2">
-                  <Label htmlFor="excluded-paths">Excluded files</Label>
+                  <Label htmlFor="excluded-paths">{t("settings.filesAndLinks.excludedFiles")}</Label>
                   <textarea
                     id="excluded-paths"
                     rows={3}
-                    placeholder={"One path per line\nArchive/\nprivate.md"}
+                    placeholder={t("settings.filesAndLinks.excludedFilesPlaceholder")}
                     value={excludedDraft ?? vaultSettings.excludedPaths.join("\n")}
                     onChange={(e) => onExcludedChange(e.target.value)}
                     className="w-full rounded-md border border-ob-border bg-ob-primary px-2 py-1.5 text-[13px] text-ob-text outline-none placeholder:text-ob-faint"
@@ -662,11 +694,11 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                 <VaultsSection vaultId={vaultId} />
                 <div className="space-y-3">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Daily notes
+                  {t("settings.sections.dailyNotes")}
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor="daily-format">Date format</Label>
+                    <Label htmlFor="daily-format">{t("settings.vault.dateFormat")}</Label>
                     <Input
                       id="daily-format"
                       placeholder="YYYY-MM-DD"
@@ -675,7 +707,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="daily-folder">Folder</Label>
+                    <Label htmlFor="daily-folder">{t("settings.vault.folder")}</Label>
                     <Input
                       id="daily-folder"
                       placeholder="Journal"
@@ -685,7 +717,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="daily-template">Template note path</Label>
+                  <Label htmlFor="daily-template">{t("settings.vault.templateNotePath")}</Label>
                   <Input
                     id="daily-template"
                     placeholder="Templates/Daily"
@@ -694,7 +726,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="templates-folder">Templates folder</Label>
+                  <Label htmlFor="templates-folder">{t("settings.vault.templatesFolder")}</Label>
                   <Input
                     id="templates-folder"
                     placeholder="Templates"
@@ -703,7 +735,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                   />
                 </div>
                 <Button size="sm" onClick={() => saveVault.mutate()} disabled={saveVault.isPending}>
-                  Save vault settings
+                  {t("settings.vault.saveVaultSettings")}
                 </Button>
                 </div>
               </section>
@@ -712,25 +744,25 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Canvas" && (
               <section className="space-y-4">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Canvas
+                  {t("settings.sections.canvas")}
                 </h3>
                 <div className="flex items-center justify-between gap-4">
                   <Label htmlFor="canvas-bg" className="font-normal text-ob-muted">
-                    Background
+                    {t("settings.canvas.background")}
                     <span className="block text-[11px] font-normal text-ob-faint">
-                      Board pattern for all canvases in this vault.
+                      {t("settings.canvas.backgroundHint")}
                     </span>
                   </Label>
                   <select
                     id="canvas-bg"
-                    aria-label="Canvas background"
+                    aria-label={t("settings.canvas.background")}
                     value={(settings.canvasBackground as string) ?? "dots"}
                     onChange={(e) => saveVaultPatch.mutate({ canvasBackground: e.target.value })}
                     className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
                   >
-                    <option value="dots">Dots</option>
-                    <option value="grid">Grid</option>
-                    <option value="blank">Blank</option>
+                    <option value="dots">{t("settings.canvas.backgroundDots")}</option>
+                    <option value="grid">{t("settings.canvas.backgroundGrid")}</option>
+                    <option value="blank">{t("settings.canvas.backgroundBlank")}</option>
                   </select>
                 </div>
               </section>
@@ -739,22 +771,12 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Publish" && (
               <section className="space-y-3">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Publish site
+                  {t("settings.sections.publishSite")}
                 </h3>
                 {siteStatus?.enabled && siteStatus.slug ? (
                   <div className="space-y-2">
                     <p className="text-[13px] text-ob-muted">
-                      Live at{" "}
-                      <a
-                        href={`/s/${siteStatus.slug}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="text-ob-accent hover:underline"
-                      >
-                        /s/{siteStatus.slug}
-                      </a>{" "}
-                      — notes with <code className="text-ob-faint">publish: false</code> stay
-                      private.
+                      {t("settings.publish.liveAt", { url: `/s/${siteStatus.slug}`, code: "publish: false" })}
                     </p>
                     <Button
                       size="sm"
@@ -762,20 +784,20 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
                       onClick={() => siteToggle.mutate(false)}
                       disabled={siteToggle.isPending}
                     >
-                      Unpublish site
+                      {t("settings.publish.unpublishSite")}
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <p className="text-[13px] text-ob-muted">
-                      Publish this vault as a public read-only website.
+                      {t("settings.publish.publishDesc")}
                     </p>
                     <Button
                       size="sm"
                       onClick={() => siteToggle.mutate(true)}
                       disabled={siteToggle.isPending}
                     >
-                      Publish vault site
+                      {t("settings.publish.publishVault")}
                     </Button>
                   </div>
                 )}
@@ -785,18 +807,18 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
             {tab === "Collab" && (
               <section className="space-y-3">
                 <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">
-                  Live collaboration
+                  {t("settings.sections.liveCollaboration")}
                 </h3>
                 <label className="flex items-center justify-between gap-2 text-[13px] text-ob-muted">
                   <span>
-                    Live collaboration <span className="text-ob-faint">(beta)</span>
+                    {t("settings.collab.title", { badge: t("settings.collab.beta") })}
                     <span className="block text-[11px] text-ob-faint">
-                      Sync open notes across devices and tabs in real time.
+                      {t("settings.collab.hint")}
                     </span>
                   </span>
                   <input
                     type="checkbox"
-                    aria-label="Live collaboration"
+                    aria-label={t("settings.sections.liveCollaboration")}
                     checked={collabDraft ?? Boolean(settings.collabEnabled)}
                     onChange={(e) => {
                       setCollabDraft(e.target.checked);
@@ -816,6 +838,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
 
 /** Searchable, grouped shortcut reference (S12.1) — Obsidian's Hotkeys tab. */
 function HotkeysTab({ query, onQuery }: { query: string; onQuery: (q: string) => void }) {
+  const { t } = useTranslation();
   const filtered = filterHotkeys(query);
   const groups = HOTKEY_SECTIONS.map((section) => ({
     section,
@@ -824,14 +847,14 @@ function HotkeysTab({ query, onQuery }: { query: string; onQuery: (q: string) =>
 
   return (
     <section className="space-y-4">
-      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">Hotkeys</h3>
+      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("settings.sections.hotkeys")}</h3>
       <Input
-        aria-label="Search hotkeys"
-        placeholder="Search hotkeys…"
+        aria-label={t("settings.sections.hotkeys")}
+        placeholder={t("settings.hotkeys.searchPlaceholder")}
         value={query}
         onChange={(e) => onQuery(e.target.value)}
       />
-      {groups.length === 0 && <p className="text-[13px] text-ob-faint">No hotkeys match.</p>}
+      {groups.length === 0 && <p className="text-[13px] text-ob-faint">{t("settings.hotkeys.noMatch")}</p>}
       {groups.map((g) => (
         <div key={g.section} className="space-y-0.5">
           <div className="px-1 pt-1 text-[11px] font-medium tracking-wide text-ob-faint uppercase">
@@ -875,6 +898,7 @@ function FontSelect({
   value: FontChoice;
   onChange: (value: FontChoice) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between gap-4">
       <Label htmlFor={id} className="font-normal text-ob-muted">
@@ -889,7 +913,7 @@ function FontSelect({
       >
         {Object.keys(FONT_CHOICES).map((key) => (
           <option key={key} value={key}>
-            {key === "default" ? "Default" : key}
+            {key === "default" ? t("settings.appearance.defaultFont") : key}
           </option>
         ))}
       </select>

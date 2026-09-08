@@ -11,6 +11,7 @@ import { CanvasesSection } from "./canvases-section";
 import { SearchPane } from "./search-pane";
 import { VaultSwitcher } from "./vault-switcher";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ export function SidebarLeft({
   /** Drawer mode (mobile): fill the parent, no resize handle, ignore open flag. */
   drawer?: boolean;
 }) {
+  const { t } = useTranslation();
   const open = useWorkspaceStore((s) => s.leftSidebarOpen);
   const width = useWorkspaceStore((s) => s.leftWidth);
   const setWidth = useWorkspaceStore((s) => s.setLeftWidth);
@@ -65,19 +67,19 @@ export function SidebarLeft({
     >
       <div className="flex items-center gap-0.5 border-b border-ob-border px-2 py-1">
         <PaneTab
-          label="Files"
+          label={t("sidebar.files")}
           active={pane === "files"}
           onClick={() => setPane("files")}
           icon={<Files className="size-4" strokeWidth={1.75} />}
         />
         <PaneTab
-          label="Search"
+          label={t("sidebar.search")}
           active={pane === "search"}
           onClick={() => setPane("search")}
           icon={<Search className="size-4" strokeWidth={1.75} />}
         />
         <PaneTab
-          label="Bookmarks"
+          label={t("sidebar.bookmarks")}
           active={pane === "bookmarks"}
           onClick={() => setPane("bookmarks")}
           icon={<Bookmark className="size-4" strokeWidth={1.75} />}
@@ -105,7 +107,7 @@ export function SidebarLeft({
       <div
         role="separator"
         aria-orientation="vertical"
-        aria-label="Resize sidebar"
+        aria-label={t("sidebar.resizeSidebar")}
         onPointerDown={onDragStart}
         className="absolute top-0 right-0 z-10 h-full w-1 cursor-col-resize hover:bg-ob-accent/40"
       />
@@ -119,13 +121,14 @@ export function SidebarLeft({
  *  one: no `aria-pressed`, because it toggles nothing — `aria-haspopup` says
  *  what actually happens. The label lives on the tooltip, like its neighbours. */
 function ImportDataButton() {
+  const { t } = useTranslation();
   const setImportOpen = useWorkspaceStore((s) => s.setImportOpen);
   return (
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         <button
           type="button"
-          aria-label="Import data"
+          aria-label={t("sidebar.importData")}
           aria-haspopup="dialog"
           data-testid="import-data-button"
           onClick={() => setImportOpen(true)}
@@ -134,7 +137,7 @@ function ImportDataButton() {
           <Import className="size-4" strokeWidth={1.75} />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="bottom">Import data</TooltipContent>
+      <TooltipContent side="bottom">{t("sidebar.importData")}</TooltipContent>
     </Tooltip>
   );
 }
