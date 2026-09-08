@@ -361,7 +361,7 @@ export const en = {
       filePathCopied: "Copied file path.",
       bookmarked: "Bookmarked.",
       bookmarkedNTabs: "Bookmarked {count} note{plural}.",
-      folderCreated: "Created “{name}".",
+      folderCreated: "Created “{name}”.",
       commandFailed: "Could not run that command.",
       settingSaveFailed: "Could not save setting.",
     },
