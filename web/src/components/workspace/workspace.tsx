@@ -224,7 +224,7 @@ export function Workspace({ vault }: { vault: Vault }) {
   const newNote = useMutation({
     mutationFn: () => {
       const stamp = new Date();
-      const title = `Untitled ${stamp.toISOString().slice(0, 16).replace("T", " ")}`;
+      const title = `Untitled ${stamp.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })}`;
       return noteApi.create(vault.id, {
         title,
         folder_path: resolveNewNoteFolder(queryClient, vault.id),
