@@ -1,10 +1,19 @@
-import type { EnTranslations } from "./locales/en";
+import type { en } from "./locales/en";
+
+type Widen<T> = T extends string
+  ? string
+  : T extends readonly unknown[]
+    ? T
+    : T extends object
+      ? { [K in keyof T]: Widen<T[K]> }
+      : T;
 
 export type Locale = "en" | "ja";
 
-export type Translations = EnTranslations;
+/** Translation values share the English tree, but each locale may contain any string. */
+export type Translations = Widen<typeof en>;
 
-export type TranslationKey = NestedKeyOf<EnTranslations>;
+export type TranslationKey = NestedKeyOf<typeof en>;
 
 export type InterpolationParams = Record<string, string | number | undefined>;
 

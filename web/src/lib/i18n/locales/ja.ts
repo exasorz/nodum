@@ -1,6 +1,6 @@
-import type { EnTranslations } from "./en";
+import type { Translations } from "../types";
 
-export const ja: EnTranslations = {
+export const ja: Translations = {
   common: {
     save: "保存",
     cancel: "キャンセル",

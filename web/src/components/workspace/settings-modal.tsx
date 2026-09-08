@@ -29,6 +29,7 @@ import { authApi, siteApi, vaultApi } from "@/lib/api/endpoints";
 import { APP_VERSION, DOCS_URL, HELP_URL } from "@/lib/app-meta";
 import { filterHotkeys, HOTKEY_SECTIONS } from "@/lib/hotkeys";
 import { useTranslation } from "@/lib/i18n";
+import type { TranslationKey } from "@/lib/i18n";
 import { LanguageSelector } from "./language-selector";
 import {
   FONT_CHOICES,
@@ -62,7 +63,7 @@ const TABS = [
 ] as const;
 type SettingsTab = (typeof TABS)[number];
 
-const TAB_LABELS: Record<SettingsTab, string> = {
+const TAB_LABELS: Record<SettingsTab, TranslationKey> = {
   General: "settings.tabs.general",
   Editor: "settings.tabs.editor",
   Appearance: "settings.tabs.appearance",
