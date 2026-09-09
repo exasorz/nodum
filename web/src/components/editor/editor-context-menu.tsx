@@ -113,6 +113,7 @@ function flattenNotes(items: TreeItem[], trail = ""): { id: string; label: strin
 
 /** A one-field dialog — used for "Add external link". */
 function UrlDialog({ onSubmit, onClose }: { onSubmit: (url: string) => void; onClose: () => void }) {
+  const { t } = useTranslation();
   const [url, setUrl] = useState("https://");
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
