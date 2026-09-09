@@ -6,12 +6,14 @@
  *  helper the store navigates with, so a disabled arrow always means
  *  "nowhere to go". */
 
+import { useTranslation } from "@/lib/i18n";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { historyStep, useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
 
 export function NavArrows({ paneIndex }: { paneIndex: number }) {
+ paneIndex }: { paneIndex: number }) {  const { t } = useTranslation();
   const pane = useWorkspaceStore((s) => s.panes[paneIndex]);
   const navigateBack = useWorkspaceStore((s) => s.navigateBack);
   const navigateForward = useWorkspaceStore((s) => s.navigateForward);
@@ -28,8 +30,8 @@ export function NavArrows({ paneIndex }: { paneIndex: number }) {
     <div className="flex shrink-0 items-center gap-0.5">
       <button
         type="button"
-        aria-label="Navigate back (⌘[)"
-        title="Back (⌘[)"
+        aria-label={t("navArrows.navigateBack")}
+        title={t("navArrows.back")}
         disabled={!canBack}
         onClick={() => navigateBack(paneIndex)}
         className={cls(canBack)}
@@ -38,8 +40,8 @@ export function NavArrows({ paneIndex }: { paneIndex: number }) {
       </button>
       <button
         type="button"
-        aria-label="Navigate forward (⌘])"
-        title="Forward (⌘])"
+        aria-label={t("navArrows.navigateForward")}
+        title={t("navArrows.forward")}
         disabled={!canForward}
         onClick={() => navigateForward(paneIndex)}
         className={cls(canForward)}

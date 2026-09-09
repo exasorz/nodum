@@ -17,6 +17,7 @@ import { remarkCallouts } from "@/lib/editor/remark-callouts";
 import { remarkInlineHtml } from "@/lib/editor/remark-inline-html";
 
 import "katex/dist/katex.min.css";
+import { useTranslation } from "@/lib/i18n";
 
 interface ReadingViewProps {
   content: string;
@@ -33,6 +34,7 @@ interface ReadingViewProps {
  * left untouched — a [[link]] or %% inside code is literal text.
  */
 function preprocessWikilinks(md: string): string {
+  const { t } = useTranslation();
   const CODE_SPLIT = /(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/g;
   return md
     .split(CODE_SPLIT)

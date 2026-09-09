@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/context-menu";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 export function TabBar({ paneIndex, onNewNote }: { paneIndex: number; onNewNote: () => void }) {
   const pane = useWorkspaceStore((s) => s.panes[paneIndex]);
+  const { t } = useTranslation();
   const isActivePane = useWorkspaceStore((s) => s.activePane === paneIndex);
   const setActiveTab = useWorkspaceStore((s) => s.setActiveTab);
   const closeTab = useWorkspaceStore((s) => s.closeTab);
@@ -152,7 +154,7 @@ export function TabBar({ paneIndex, onNewNote }: { paneIndex: number; onNewNote:
               <ContextMenuItem onSelect={() => togglePin(tab.id, paneIndex)}>
                 {tab.pinned ? "Unpin" : "Pin"}
               </ContextMenuItem>
-              <ContextMenuItem onSelect={() => splitRight()}>Split right</ContextMenuItem>
+              <ContextMenuItem onSelect={() => splitRight()}>{t("tabBar.splitRight")}</ContextMenuItem>
               <ContextMenuSeparator />
               <ContextMenuItem
                 disabled={Boolean(tab.pinned)}
@@ -166,7 +168,7 @@ export function TabBar({ paneIndex, onNewNote }: { paneIndex: number; onNewNote:
       })}
       <button
         type="button"
-        aria-label="New tab"
+        aria-label={t("tabBar.newTab")}
         onClick={onNewNote}
         className="mb-1 ml-1 flex w-8 shrink-0 items-center justify-center self-center rounded-md py-1 text-ob-faint hover:bg-ob-hover hover:text-ob-text"
       >

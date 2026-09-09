@@ -19,8 +19,10 @@ import { Label } from "@/components/ui/label";
 import { apiKeysApi } from "@/lib/api/endpoints";
 import { DOCS_URL } from "@/lib/app-meta";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 
 function CopyButton({ text, label }: { text: string; label: string }) {
+  const { t } = useTranslation();
   const [done, setDone] = useState(false);
   return (
     <button
@@ -88,7 +90,7 @@ export function ApiKeysTab() {
           <code className="min-w-0 flex-1 rounded border border-ob-border bg-ob-bg px-2 py-1.5 font-mono text-[12px] text-ob-text [overflow-wrap:anywhere]">
             {baseUrl}
           </code>
-          <CopyButton text={baseUrl} label="Copy base URL" />
+          <CopyButton text={baseUrl} label={t("apiKeys.copyBaseUrl")} />
         </div>
       </div>
 
@@ -136,9 +138,9 @@ export function ApiKeysTab() {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <Label>Try it</Label>
-          <span className="text-[11px] text-ob-faint">A fresh key drops straight into this shape.</span>
+          <span className="text-[11px] text-ob-faint">{t("apiKeys.freshKeyMessage")}</span>
           <span className="flex-1" />
-          <CopyButton text={templateCurl} label="Copy curl command" />
+          <CopyButton text={templateCurl} label={t("apiKeys.copyCurlCommand")} />
         </div>
         <pre className="rounded border border-ob-border bg-ob-bg px-2.5 py-2 font-mono text-[11.5px] leading-relaxed whitespace-pre-wrap text-ob-muted [overflow-wrap:anywhere]">
           {templateCurl}

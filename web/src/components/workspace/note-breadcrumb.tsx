@@ -13,9 +13,11 @@ import { vaultApi } from "@/lib/api/endpoints";
 import type { Note, TreeItem } from "@/lib/api/types";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 /** Find the folder id for a slash-path, so a crumb can point at a real folder. */
 function folderIdForPath(items: TreeItem[], path: string, trail = ""): string | null {
+  const { t } = useTranslation();
   for (const item of items) {
     if (item.type !== "folder") continue;
     const here = trail ? `${trail}/${item.name}` : item.name;
@@ -63,7 +65,7 @@ export function NoteBreadcrumb({
 
   return (
     <nav
-      aria-label="Note location"
+      aria-label={t("noteBreadcrumb.noteLocation")}
       className="flex min-w-0 items-center gap-1 truncate text-[12px] text-ob-faint"
     >
       {folders.map((name, i) => {
@@ -92,8 +94,8 @@ export function NoteBreadcrumb({
       {editing === null ? (
         <button
           type="button"
-          aria-label="Note path"
-          title="Click to rename"
+          aria-label={t("noteBreadcrumb.notePath")}
+          title={t("noteBreadcrumb.clickToRename")}
           className="max-w-60 truncate rounded px-1 py-0.5 text-ob-muted hover:bg-ob-hover hover:text-ob-text"
           onClick={() => setEditing(note.title)}
           onDoubleClick={() => openInExplorer(() => revealNote(note.id))}
@@ -103,7 +105,7 @@ export function NoteBreadcrumb({
       ) : (
         <input
           autoFocus
-          aria-label="Rename note"
+          aria-label={t("noteBreadcrumb.renameNote")}
           value={editing}
           onChange={(e) => setEditing(e.target.value)}
           onBlur={commit}

@@ -7,6 +7,7 @@ import { fetchPublicSite } from "@/lib/api/public-server";
 import * as ld from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { SITE_NAME, absolute } from "@/lib/seo/site";
+import { useTranslation } from "@/lib/i18n";
 
 /**
  * A published vault's front page — server-rendered, so the vault name and
@@ -24,6 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const site = await fetchPublicSite(slug);
+  const { t } = useTranslation();
   if (!site) {
     return pageMetadata({
       title: "Site not found",

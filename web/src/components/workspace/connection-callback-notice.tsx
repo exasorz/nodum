@@ -23,6 +23,7 @@ import { useEffect, useRef } from "react";
 
 import { useToastStore } from "@/lib/stores/toast-store";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
+import { useTranslation } from "@/lib/i18n";
 
 const REASONS: Record<string, string> = {
   no_refresh_token:
@@ -41,6 +42,7 @@ const REASONS: Record<string, string> = {
 
 const FALLBACK = "Could not finish connecting your Google account. Please try again.";
 
+const { t } = useTranslation();
 export function ConnectionCallbackNotice() {
   const search = useSearchParams();
   const router = useRouter();

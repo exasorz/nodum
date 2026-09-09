@@ -16,6 +16,7 @@
  * is missing and opens the settings tab that fixes it.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, FilePlus2, History, Plus, Send, Sparkles, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -39,7 +40,10 @@ import { cn } from "@/lib/utils";
 const CONTEXT_CHARS = 4_000;
 
 export function AiChatPane({
-  vaultId,
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+vaultId,
   noteId,
   onOpenNote,
 }: {
@@ -168,14 +172,14 @@ export function AiChatPane({
   });
 
   if (isLoading) {
-    return <p className="p-2 text-[13px] text-ob-faint">Loading…</p>;
+    return <p className="p-2 text-[13px] text-ob-faint">{t("aiChat.loading")}</p>;
   }
 
   if (!configured) {
     return (
       <div className="flex h-full flex-col items-start justify-center gap-3 p-4 text-[13px]">
         <Sparkles className="size-5 text-ob-accent" strokeWidth={1.75} />
-        <p className="font-medium text-ob-text">AI is not set up yet</p>
+        <p className="font-medium text-ob-text">{t("aiChat.notSetUp")}</p>
         <p className="text-ob-muted">
           {status?.available === false
             ? "This server has no encryption key configured, so it cannot store an API key. Ask whoever runs it to set AI_ENCRYPTION_KEY."
@@ -191,7 +195,8 @@ export function AiChatPane({
   }
 
   const startNewChat = () => {
-    setSelection({ mode: "new" });
+  const { t } = useTranslation();
+setSelection({ mode: "new" });
     setPending([]);
   };
 
@@ -206,7 +211,7 @@ export function AiChatPane({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                aria-label="Chat history"
+                aria-label={t("aiChat.chatHistory")}
                 className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-ob-hover hover:text-ob-text"
               >
                 <History className="size-3.5" strokeWidth={2} />
@@ -217,7 +222,7 @@ export function AiChatPane({
                 Chats in this vault
               </DropdownMenuLabel>
               {(conversations ?? []).length === 0 && (
-                <p className="px-2 py-1.5 text-[12px] text-ob-faint">Nothing saved yet.</p>
+                <p className="px-2 py-1.5 text-[12px] text-ob-faint">{t("aiChat.nothingSaved")}</p>
               )}
               {(conversations ?? []).map((c) => (
                 <DropdownMenuItem
@@ -257,7 +262,7 @@ export function AiChatPane({
           </DropdownMenu>
           <button
             type="button"
-            aria-label="New chat"
+            aria-label={t("aiChat.newChat")}
             onClick={startNewChat}
             className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-ob-hover hover:text-ob-text"
           >
@@ -318,7 +323,7 @@ export function AiChatPane({
           <div className="space-y-1.5" data-testid="ai-live">
             {live.text ? (
               <>
-                <p className="px-1 text-[11px] font-medium tracking-wide text-ob-faint uppercase">Assistant</p>
+                <p className="px-1 text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("aiChat.assistant")}</p>
                 <div
                   className="rounded-md bg-ob-bg px-2 py-1.5 text-[13px] text-ob-muted"
                   style={{ "--editor-font-size": "13px" } as React.CSSProperties}
@@ -343,7 +348,7 @@ export function AiChatPane({
         }}
       >
         <textarea
-          aria-label="Message the assistant"
+          aria-label={t("aiChat.messageAssistant")}
           rows={2}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -361,7 +366,7 @@ export function AiChatPane({
         <Button
           type="submit"
           size="sm"
-          aria-label="Send"
+          aria-label={t("aiChat.send")}
           disabled={!draft.trim() || send.isPending}
           className="mb-0.5"
         >

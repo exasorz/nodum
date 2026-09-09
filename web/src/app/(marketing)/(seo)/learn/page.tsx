@@ -15,8 +15,10 @@ import { GLOSSARY } from "@/content/seo/glossary";
 import { TOPICS_BY_RANK } from "@/content/seo/topics";
 import { pageMetadata } from "@/lib/seo/metadata";
 import * as ld from "@/lib/seo/jsonld";
+import { useTranslation } from "@/lib/i18n";
 
 const PATH = "/learn";
+const { t } = useTranslation();
 const TRAIL = [
   { name: "Nodum", path: "/" },
   { name: "Learn", path: PATH },

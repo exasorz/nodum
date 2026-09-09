@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { vaultApi } from "@/lib/api/endpoints";
 import type { TreeItem } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 interface FolderNode {
   name: string;
@@ -30,6 +31,7 @@ interface FolderNode {
 }
 
 function foldersOf(items: TreeItem[]): FolderNode[] {
+  const { t } = useTranslation();
   const out: FolderNode[] = [];
   for (const item of items) {
     if (item.type === "folder") {
@@ -153,7 +155,7 @@ export function FolderPicker({
                 onChange(event.target.value.trim());
               }}
               placeholder="e.g. Sources/Google"
-              aria-label="New folder name"
+              aria-label={t("folderPicker.newFolderName")}
               className="h-8 text-[12px]"
             />
           </div>

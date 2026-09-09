@@ -11,6 +11,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 import { api, apiJson } from "@/lib/api/client";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useTranslation } from "@/lib/i18n";
 
 // ── Thread: likes + the read beacon ──────────────────────────────────────────
 
@@ -21,6 +22,7 @@ interface ThreadViewerState {
 
 const ThreadContext = createContext<ThreadViewerState | null>(null);
 
+const { t } = useTranslation();
 export function ThreadEngagement({
   topicId,
   maxPostNumber,
@@ -129,7 +131,7 @@ export function UnreadBadge({ topicId }: { topicId: string }) {
   return (
     <span
       className="ml-2 inline-block size-2 rounded-full bg-[var(--mk-accent,#7c6cf6)] align-middle"
-      title="New since you last read"
+      title={t("engagement.newSinceLastRead")}
       data-testid="unread-badge"
     />
   );

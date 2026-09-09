@@ -7,8 +7,10 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useTranslation } from "@/lib/i18n";
 
 export function MarkdownBox({
+  const { t } = useTranslation();
   value,
   onChange,
   placeholder,
@@ -43,7 +45,7 @@ export function MarkdownBox({
           placeholder={placeholder}
           rows={minRows}
           className="w-full resize-y bg-transparent px-3 py-2 font-mono text-[0.9rem] outline-none"
-          aria-label="Markdown"
+          aria-label={t("markdownBox.markdown")}
         />
       ) : (
         <div className="mk-prose min-h-24 px-3 py-2">
@@ -59,7 +61,7 @@ export function MarkdownBox({
               {value}
             </ReactMarkdown>
           ) : (
-            <p className="opacity-50">Nothing to preview yet.</p>
+            <p className="opacity-50">{t("markdownBox.nothingToPreview")}</p>
           )}
         </div>
       )}

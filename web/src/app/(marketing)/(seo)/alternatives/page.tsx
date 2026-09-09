@@ -14,9 +14,11 @@ import { ALTERNATIVES_BY_RANK, CHECKED } from "@/content/seo/alternatives";
 import { TOPICS_BY_RANK } from "@/content/seo/topics";
 import { pageMetadata } from "@/lib/seo/metadata";
 import * as ld from "@/lib/seo/jsonld";
+import { useTranslation } from "@/lib/i18n";
 
 const PATH = "/alternatives";
 
+const { t } = useTranslation();
 const TRAIL = [
   { name: "Nodum", path: "/" },
   { name: "Alternatives", path: PATH },

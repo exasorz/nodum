@@ -18,11 +18,13 @@ import { Label } from "@/components/ui/label";
 import { authApi } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 
 export function DeleteAccountSection({ email }: { email: string | undefined }) {
   const [stage, setStage] = useState<"idle" | "confirming" | "code">("idle");
   const [code, setCode] = useState("");
   const clearSession = useAuthStore((s) => s.logout);
+  const { t } = useTranslation();
   const router = useRouter();
 
   const requestCode = useMutation({
@@ -56,7 +58,7 @@ export function DeleteAccountSection({ email }: { email: string | undefined }) {
 
   return (
     <section className="space-y-3 border-t border-ob-border pt-4">
-      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">Danger zone</h3>
+      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("deleteAccount.dangerZone")}</h3>
 
       {stage === "idle" && (
         <>

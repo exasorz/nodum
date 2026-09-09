@@ -734,7 +734,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
         <button
           type="button"
           aria-label={t("fileExplorer.revealActive")}
-          title="Show the open note, collapse everything else"
+          title={t("fileExplorer.revealActiveTitle")}
           onClick={revealActive}
           disabled={!activeNoteId}
           className="ml-auto flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text disabled:opacity-40 disabled:hover:bg-transparent"

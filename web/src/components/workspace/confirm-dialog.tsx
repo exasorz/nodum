@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import { useTranslation } from "@/lib/i18n";;
 
 /**
  * Promise-based delete confirmation (S11.3) — gated by the user's
@@ -48,6 +50,7 @@ const useConfirmStore = create<ConfirmState>((set, get) => ({
 
 /** Resolves true when deletion may proceed (immediately if the pref is off). */
 export function confirmDelete(message: string, confirmLabel?: string): Promise<boolean> {
+  const { t } = useTranslation();
   const prefs = parseUserPrefs(useAuthStore.getState().user?.settings);
   if (!prefs.confirmDelete) return Promise.resolve(true);
   return useConfirmStore.getState().request(message, confirmLabel);
@@ -67,7 +70,7 @@ export function ConfirmDialog() {
     >
       <DialogContent className="border-ob-border bg-ob-sidebar sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogTitle>{t("confirm.areYouSure")}</DialogTitle>
           <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">

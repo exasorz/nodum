@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { ReadingView } from "@/components/editor/reading-view";
+import { useTranslation } from "@/lib/i18n";
 
 /**
  * Renders a published note's markdown and resolves its wikilinks against the
@@ -25,6 +26,7 @@ export function PublicReader({
 }) {
   const router = useRouter();
 
+  const { t } = useTranslation();
   const navigate = (target: string) => {
     if (!slug) return;
     const wanted = target.split("#")[0].trim().toLowerCase();

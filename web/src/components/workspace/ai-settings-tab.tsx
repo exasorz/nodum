@@ -8,6 +8,7 @@
  * `sk-ant…7f2a`. There is deliberately no way to read a stored key back out.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, ExternalLink, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
 
 export function AiSettingsTab({ vaultId, vaultName }: { vaultId: string; vaultName?: string }) {
+ vaultId, vaultName }: { vaultId: string; vaultName?: string }) {  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.push);
   const { data: status } = useQuery({
@@ -92,7 +94,7 @@ export function AiSettingsTab({ vaultId, vaultName }: { vaultId: string; vaultNa
   if (status && !status.available) {
     return (
       <section className="space-y-3">
-        <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">AI</h3>
+        <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("aiSettingsTab.title")}</h3>
         <p className="text-[13px] text-ob-muted">
           This server has no <code>AI_ENCRYPTION_KEY</code> configured, so it cannot store an API key
           safely. Set one and restart the server to turn the AI features on.
@@ -104,7 +106,7 @@ export function AiSettingsTab({ vaultId, vaultName }: { vaultId: string; vaultNa
   return (
     <section className="space-y-5">
       <div className="space-y-2">
-        <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">AI provider</h3>
+        <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("aiSettingsTab.aiProvider")}</h3>
         <p className="text-[12px] text-ob-faint">
           Nodum has no AI of its own — you connect your own account. Your key is encrypted before it
           is stored, is never sent to the browser again, and is used only for requests you make.
@@ -113,8 +115,8 @@ export function AiSettingsTab({ vaultId, vaultName }: { vaultId: string; vaultNa
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">Keys for</p>
-        <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Scope of the AI key">
+        <p className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("aiSettingsTab.keysFor")}</p>
+        <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={t("aiSettings.scopeOfAiKey")}>
           {(
             [
               ["account", "Your account (every vault)"],

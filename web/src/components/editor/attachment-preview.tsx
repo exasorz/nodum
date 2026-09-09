@@ -9,6 +9,7 @@
  * (`pointer-events: auto`) so a PDF can actually be scrolled.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
 
 import { resolveAttachmentUrl } from "@/lib/editor/attachment-urls";
@@ -26,6 +27,7 @@ const ATTACHMENT_EXTS = new Set([
 ]);
 
 export function attachmentExt(target: string): string | null {
+  const { t } = useTranslation();
   const name = target.split("/").pop() ?? target;
   if (!name.includes(".")) return null;
   const ext = name.split(".").pop()!.toLowerCase();
@@ -93,9 +95,9 @@ export function AttachmentPreview({
       </p>
       <div className="flex max-h-[420px] items-center justify-center p-2">
         {failed ? (
-          <p className="p-4 text-[13px] text-ob-faint">Attachment not found.</p>
+          <p className="p-4 text-[13px] text-ob-faint">{t("editorPane.attachmentNotFound")}</p>
         ) : !url ? (
-          <p className="p-4 text-[13px] text-ob-faint">Loading…</p>
+          <p className="p-4 text-[13px] text-ob-faint">{t("editorPane.loading")}</p>
         ) : IMAGE_EXTS.has(ext) ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

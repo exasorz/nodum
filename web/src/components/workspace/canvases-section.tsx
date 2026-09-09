@@ -2,6 +2,7 @@
 
 /** Canvases list at the bottom of the file pane — create + open boards. */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LayoutDashboard, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -12,6 +13,7 @@ import { toastError } from "@/lib/stores/toast-store";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 export function CanvasesSection({ vaultId }: { vaultId: string }) {
+ vaultId }: { vaultId: string }) {  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const openTab = useWorkspaceStore((s) => s.openTab);
   const closeTab = useWorkspaceStore((s) => s.closeTab);
@@ -51,7 +53,7 @@ export function CanvasesSection({ vaultId }: { vaultId: string }) {
         </span>
         <button
           type="button"
-          aria-label="New canvas"
+          aria-label={t("canvases.newCanvas")}
           onClick={() => setCreating((v) => !v)}
           className="flex size-5 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text"
         >
@@ -68,7 +70,7 @@ export function CanvasesSection({ vaultId }: { vaultId: string }) {
             if (e.key === "Escape") setCreating(false);
           }}
           placeholder="Canvas name…"
-          aria-label="Canvas name"
+          aria-label={t("canvases.canvasName")}
           className="mb-1 h-7 w-full rounded border border-ob-border bg-ob-bg px-2 text-[12px] text-ob-text outline-none"
         />
       )}
@@ -98,7 +100,7 @@ export function CanvasesSection({ vaultId }: { vaultId: string }) {
           </div>
         ))}
         {canvases && canvases.length === 0 && !creating && (
-          <p className="px-1.5 text-[11px] text-ob-faint">No canvases yet.</p>
+          <p className="px-1.5 text-[11px] text-ob-faint">{t("canvases.noCanvases")}</p>
         )}
       </div>
     </div>

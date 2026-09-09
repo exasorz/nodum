@@ -14,9 +14,11 @@ import { TOPICS_BY_RANK } from "@/content/seo/topics";
 import * as ld from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PRIMARY } from "@/lib/seo/keywords";
+import { useTranslation } from "@/lib/i18n";
 
 const GITHUB = "https://github.com/nodummd/nodum";
 
+const { t } = useTranslation();
 /**
  * The front door. A server component — it was a client component for one
  * `useEffect` redirect, which is now its own island, and the difference is

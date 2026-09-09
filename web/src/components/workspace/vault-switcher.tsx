@@ -165,7 +165,7 @@ export function NewVaultDialog({
           <>
             <Input
               autoFocus
-              aria-label="Vault name"
+              aria-label={t("vaultSwitcher.vaultName")}
               placeholder="Research"
               value={name}
               onChange={(e) => setName(e.target.value)}

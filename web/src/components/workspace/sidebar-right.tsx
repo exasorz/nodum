@@ -2,6 +2,7 @@
 
 /** Right sidebar — Backlinks / Outgoing / Tags / Outline panes (Obsidian style). */
 
+import { useTranslation } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronRight, GitFork, Hash, Link2, List, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -19,11 +20,14 @@ type PaneKind = RightPaneKind;
 // Code-split — cosmos.gl must never enter the shared bundle
 const GraphView = dynamic(
   () => import("@/components/graph/graph-view").then((m) => m.GraphView),
-  { ssr: false, loading: () => <EmptyHint>Loading graph…</EmptyHint> },
+  { ssr: false, loading: () => <EmptyHint>{t("sidebarRight.loadingGraph")}</EmptyHint> },
 );
 
 export function SidebarRight({
-  vaultId,
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+vaultId,
   noteId,
   onOpenNote,
   drawer = false,
@@ -46,7 +50,8 @@ export function SidebarRight({
       const startX = e.clientX;
       const startWidth = width;
       const onMove = (ev: PointerEvent) => {
-        if (dragging.current) setWidth(startWidth - (ev.clientX - startX));
+  const { t } = useTranslation();
+if (dragging.current) setWidth(startWidth - (ev.clientX - startX));
       };
       const onUp = () => {
         dragging.current = false;
@@ -123,7 +128,7 @@ export function SidebarRight({
       <div
         role="separator"
         aria-orientation="vertical"
-        aria-label="Resize right sidebar"
+        aria-label={t("sidebarRight.resizeRightSidebar")}
         onPointerDown={onDragStart}
         className="absolute top-0 left-0 z-10 h-full w-1 cursor-col-resize hover:bg-ob-accent/40"
       />
@@ -162,14 +167,14 @@ function BacklinksPane({
   });
   const preview = usePagePreview();
 
-  if (!noteId) return <EmptyHint>Open a note to see its backlinks.</EmptyHint>;
+  if (!noteId) return <EmptyHint>{t("sidebarRight.openNoteBacklinks")}</EmptyHint>;
 
   return (
     <div className="space-y-4" {...preview.handlers}>
       {preview.anchor && <PagePreview vaultId={vaultId} anchor={preview.anchor} />}
       <div>
         <SectionLabel>Linked mentions {data ? `(${data.backlinks.length})` : ""}</SectionLabel>
-        {data && data.backlinks.length === 0 && <EmptyHint>No backlinks yet.</EmptyHint>}
+        {data && data.backlinks.length === 0 && <EmptyHint>{t("sidebarRight.noBacklinks")}</EmptyHint>}
         {data?.backlinks.map((b) => (
           <button
             key={b.note_id}
@@ -190,7 +195,7 @@ function BacklinksPane({
       <RelatedSection vaultId={vaultId} noteId={noteId} onOpenNote={onOpenNote} />
       <div>
         <SectionLabel>Unlinked mentions {mentions ? `(${mentions.unlinked_mentions.length})` : ""}</SectionLabel>
-        {mentions && mentions.unlinked_mentions.length === 0 && <EmptyHint>None found.</EmptyHint>}
+        {mentions && mentions.unlinked_mentions.length === 0 && <EmptyHint>{t("sidebarRight.noneFound")}</EmptyHint>}
         {mentions?.unlinked_mentions.map((m) => (
           <button
             key={m.note_id}
@@ -226,12 +231,12 @@ function OutgoingPane({
     enabled: Boolean(noteId),
   });
 
-  if (!noteId) return <EmptyHint>Open a note to see its outgoing links.</EmptyHint>;
+  if (!noteId) return <EmptyHint>{t("sidebarRight.openNoteOutgoing")}</EmptyHint>;
 
   return (
     <div>
       <SectionLabel>Outgoing links {data ? `(${data.outgoing.length})` : ""}</SectionLabel>
-      {data && data.outgoing.length === 0 && <EmptyHint>This note has no links yet.</EmptyHint>}
+      {data && data.outgoing.length === 0 && <EmptyHint>{t("sidebarRight.noLinks")}</EmptyHint>}
       {data?.outgoing.map((l) => (
         <button
           key={`${l.target_title}-${String(l.is_embed)}`}
@@ -349,7 +354,7 @@ function TagsPane({ vaultId }: { vaultId: string }) {
   return (
     <div>
       <SectionLabel>Tags {data ? `(${data.length})` : ""}</SectionLabel>
-      {data && data.length === 0 && <EmptyHint>No tags in this vault yet.</EmptyHint>}
+      {data && data.length === 0 && <EmptyHint>{t("sidebarRight.noTags")}</EmptyHint>}
       <div className="pt-1">{renderBranch(tree, 0)}</div>
     </div>
   );
@@ -362,18 +367,18 @@ function OutlinePane({ vaultId, noteId }: { vaultId: string; noteId: string | nu
     enabled: Boolean(noteId),
   });
 
-  if (!noteId || !note) return <EmptyHint>Open a note to see its outline.</EmptyHint>;
+  if (!noteId || !note) return <EmptyHint>{t("sidebarRight.openNoteOutline")}</EmptyHint>;
 
   const headings = [...note.content.matchAll(/^(#{1,6})\s+(.+)$/gm)].map((m) => ({
     level: m[1].length,
     text: m[2].replace(/[*_`[\]]/g, ""),
   }));
 
-  if (headings.length === 0) return <EmptyHint>No headings in this note.</EmptyHint>;
+  if (headings.length === 0) return <EmptyHint>{t("sidebarRight.noHeadings")}</EmptyHint>;
 
   return (
     <div>
-      <SectionLabel>Outline</SectionLabel>
+      <SectionLabel>{t("sidebarRight.outline")}</SectionLabel>
       {headings.map((h, i) => (
         <p
           key={`${h.text}-${String(i)}`}
@@ -399,7 +404,7 @@ function LocalGraphPane({
 }) {
   const [depth, setDepth] = useState(1);
 
-  if (!noteId) return <div className="p-2"><EmptyHint>Open a note to see its local graph.</EmptyHint></div>;
+  if (!noteId) return <div className="p-2"><EmptyHint>{t("sidebarRight.openNoteLocalGraph")}</EmptyHint></div>;
 
   return (
     <div className="flex h-full flex-col">
@@ -451,7 +456,7 @@ function RelatedSection({
 
   return (
     <div>
-      <SectionLabel>Related notes</SectionLabel>
+      <SectionLabel>{t("sidebarRight.relatedNotes")}</SectionLabel>
       {data.related.map((r) => (
         <button
           key={r.id}

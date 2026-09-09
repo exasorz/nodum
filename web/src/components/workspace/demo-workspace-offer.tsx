@@ -9,6 +9,7 @@
  * from Settings → Vault, since a demo is just a vault.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Sparkles } from "lucide-react";
@@ -35,6 +36,7 @@ import { toastError, useToastStore } from "@/lib/stores/toast-store";
  *  server merges settings, so a reply is applied over the local settings rather
  *  than replacing them: whichever PATCH answers first must not undo the other. */
 export function useRememberFirstRun(patch: Record<string, unknown>) {
+  const { t } = useTranslation();
   const setUser = useAuthStore((s) => s.setUser);
   return useMutation({
     mutationFn: () => authApi.updateMe({ settings: patch }),
@@ -117,9 +119,9 @@ export function DemoWorkspaceCard({
       </p>
       <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px] text-ob-faint">
         <li>{info?.note_count ?? "200+"} linked notes</li>
-        <li>Maps of content to start from</li>
-        <li>Coloured folders and graph groups</li>
-        <li>Daily notes and templates</li>
+        <li>{t("demoWorkspace.mapsOfContent")}</li>
+        <li>{t("demoWorkspace.colouredFolders")}</li>
+        <li>{t("demoWorkspace.dailyNotes")}</li>
       </ul>
       <div className="flex items-center gap-2">
         <Button size="sm" disabled={create.isPending} onClick={() => create.mutate()}>
@@ -169,7 +171,7 @@ export function DemoWorkspaceOffer() {
             <Sparkles className="size-4 text-ob-accent" strokeWidth={2} />
             Want a Demo Workspace?
           </DialogTitle>
-          <DialogDescription>See how Nodum works with real notes and links.</DialogDescription>
+          <DialogDescription>{t("demoWorkspace.seeHowNodumWorks")}</DialogDescription>
         </DialogHeader>
         {/* The card remembers "not now" itself; the dialog's own write is for Esc / ×. */}
         <DemoWorkspaceCard onDecline={() => {}} />

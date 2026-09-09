@@ -6,9 +6,11 @@ import { X } from "lucide-react";
 
 import { useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 export function Toaster() {
   const toasts = useToastStore((s) => s.toasts);
+  const { t } = useTranslation();
   const dismiss = useToastStore((s) => s.dismiss);
 
   if (toasts.length === 0) return null;
@@ -31,7 +33,7 @@ export function Toaster() {
           <span className="min-w-0 flex-1">{t.message}</span>
           <button
             type="button"
-            aria-label="Dismiss"
+            aria-label={t("toaster.dismiss")}
             onClick={() => dismiss(t.id)}
             className="shrink-0 opacity-60 hover:opacity-100"
           >

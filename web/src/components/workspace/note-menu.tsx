@@ -252,7 +252,7 @@ export function NoteMenu({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                aria-label="More options"
+                aria-label={t("noteMenu.moreOptions")}
                 className="flex size-6 items-center justify-center rounded text-ob-faint transition-colors duration-150 hover:bg-ob-hover hover:text-ob-text"
               >
                 <MoreHorizontal className="size-4" strokeWidth={1.75} />
@@ -336,7 +336,7 @@ export function NoteMenu({
         <PickerDialog
           title={t("noteMenu.moveFile")}
           items={[{ id: null, label: t("noteMenu.vaultRoot") }, ...picked.folders]}
-          emptyLabel="No folders yet."
+          emptyLabel={t("noteMenu.noFolders")}
           onPick={(id) => {
             setPicker(null);
             move.mutate(id);
@@ -348,7 +348,7 @@ export function NoteMenu({
         <PickerDialog
           title={t("noteMenu.mergeFile")}
           items={picked.notes.filter((n) => n.id !== note.id)}
-          emptyLabel="No other notes."
+          emptyLabel={t("noteMenu.noNotes")}
           onPick={(id) => {
             setPicker(null);
             if (id) merge.mutate(id);

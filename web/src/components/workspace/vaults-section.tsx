@@ -17,9 +17,11 @@ import { vaultApi } from "@/lib/api/endpoints";
 import type { Vault } from "@/lib/api/types";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 export function VaultsSection({ vaultId }: { vaultId: string }) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const toast = useToastStore((s) => s.push);
   const { data: vaults } = useQuery({ queryKey: ["vaults"], queryFn: vaultApi.list });
   const [creating, setCreating] = useState(false);
@@ -57,7 +59,7 @@ export function VaultsSection({ vaultId }: { vaultId: string }) {
 
   return (
     <section className="space-y-3">
-      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">Vaults</h3>
+      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("vaultsSection.vaults")}</h3>
       <p className="text-[12px] text-ob-faint">
         Each vault is a separate workspace — its own notes, folders, tags and graph. Opening one
         launches it in a new browser tab, so you can work in two at once.

@@ -3,12 +3,16 @@
 /** Obsidian's "Backlinks in document" — the linked-mentions list rendered at
  *  the foot of the note instead of in the right sidebar. */
 
+import { useTranslation } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
 
 import { linkApi } from "@/lib/api/endpoints";
 
 export function BacklinksInDocument({
-  vaultId,
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+vaultId,
   noteId,
   onOpen,
 }: {
@@ -23,12 +27,12 @@ export function BacklinksInDocument({
   const backlinks = data?.backlinks ?? [];
 
   return (
-    <section className="mt-10 border-t border-ob-border pt-4" aria-label="Backlinks">
+    <section className="mt-10 border-t border-ob-border pt-4" aria-label={t("backlinks.backlinks")}>
       <h2 className="mb-2 text-[11px] font-medium tracking-wide text-ob-faint uppercase">
         {isLoading ? "Linked mentions" : `Linked mentions (${backlinks.length})`}
       </h2>
       {!isLoading && backlinks.length === 0 && (
-        <p className="text-[13px] text-ob-faint">No backlinks yet.</p>
+        <p className="text-[13px] text-ob-faint">{t("backlinks.noBacklinks")}</p>
       )}
       <ul className="space-y-2">
         {backlinks.map((b) => (

@@ -18,6 +18,7 @@ import { noteApi, searchApi } from "@/lib/api/endpoints";
 import { resolveNewNoteFolder } from "@/lib/new-note-location";
 import { toastError } from "@/lib/stores/toast-store";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
+import { useTranslation } from "@/lib/i18n";
 
 export function QuickSwitcher({
   vaultId,
@@ -27,6 +28,7 @@ export function QuickSwitcher({
   onOpenNote: (noteId: string, title: string) => void;
 }) {
   const open = useWorkspaceStore((s) => s.switcherOpen);
+  const { t } = useTranslation();
   const setOpen = useWorkspaceStore((s) => s.setSwitcherOpen);
   const openTabBackground = useWorkspaceStore((s) => s.openTabBackground);
   const [query, setQuery] = useState("");
@@ -133,7 +135,7 @@ export function QuickSwitcher({
     <CommandDialog
       open={open}
       onOpenChange={handleOpenChange}
-      title="Quick switcher"
+      title={t("quickSwitcher.title")}
       description="Jump to a note by name"
       className="border border-ob-border bg-[var(--ob-color-base-25)] shadow-2xl sm:max-w-[540px]"
     >

@@ -31,6 +31,7 @@ import {
   type NoteHover,
 } from "@/lib/graph/hover-bus";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 // Most label elements the overlay will hold. This bounds the DOM only, and it
 // is a bound on what is ON SCREEN (see refreshLabelCandidates) rather than on
@@ -42,6 +43,7 @@ const LABEL_CAP = 1200;
 // How often the candidate set may be recomputed. It costs a GPU read-back of
 // every point position, so it is throttled and only runs when the view has
 // actually moved or the layout is still settling.
+const { t } = useTranslation();
 const CANDIDATE_INTERVAL_MS = 220;
 // Extra viewport, as a fraction of it, kept in the candidate set — panning a
 // little then re-uses labels instead of rebuilding them.
@@ -1642,12 +1644,12 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
                   if (e.key === "Escape") setSearchOpen(false);
                 }}
                 placeholder="Search files… (path: tag: text)"
-                aria-label="Search graph"
+                aria-label={t("graphView.searchGraph")}
                 className="h-7 w-52 bg-transparent text-[12px] text-ob-text outline-none placeholder:text-ob-faint"
               />
               <button
                 type="button"
-                aria-label="Clear search"
+                aria-label={t("graphView.clearSearch")}
                 onClick={() => {
                   setSearchQuery("");
                   setSearchOpen(false);
@@ -1660,7 +1662,7 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
           ) : (
             <button
               type="button"
-              aria-label="Search graph"
+              aria-label={t("graphView.searchGraph")}
               onClick={() => setSearchOpen(true)}
               className={cn(
                 "flex size-8 items-center justify-center rounded-md border border-ob-border bg-ob-sidebar/95 shadow-lg backdrop-blur transition-colors hover:text-ob-text",
@@ -1673,7 +1675,7 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
           )}
           <button
             type="button"
-            aria-label="Re-arrange graph into a sphere"
+            aria-label={t("graphView.rearrangeSphere")}
             onClick={rearrange}
             className="flex size-8 items-center justify-center rounded-md border border-ob-border bg-ob-sidebar/95 text-ob-muted shadow-lg backdrop-blur transition-colors hover:text-ob-text"
           >
@@ -1681,7 +1683,7 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
           </button>
           <button
             type="button"
-            aria-label="Reset graph settings"
+            aria-label={t("graphView.resetSettings")}
             onClick={resetToDefaults}
             className="flex size-8 items-center justify-center rounded-md border border-ob-border bg-ob-sidebar/95 text-ob-muted shadow-lg backdrop-blur transition-colors hover:text-ob-text"
           >
@@ -1691,7 +1693,7 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
             <PopoverTrigger asChild>
               <button
                 type="button"
-                aria-label="Graph settings"
+                aria-label={t("graphView.settings")}
                 className="flex size-8 items-center justify-center rounded-md border border-ob-border bg-ob-sidebar/95 text-ob-muted shadow-lg backdrop-blur transition-colors hover:text-ob-text"
               >
                 <Settings2 className="size-4" strokeWidth={1.75} />
@@ -1743,15 +1745,15 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
             className="accent-[var(--ob-interactive-accent)]"
           />
         </label>
-        <ForceSlider label="Node size" min={0.1} max={5} step={0.1} value={nodeSize} onChange={setNodeSizeDraft} />
-        <ForceSlider label="Text size" min={0.3} max={3} step={0.1} value={labelSize} onChange={setLabelSizeDraft} />
-        <ForceSlider label="Link thickness" min={0.1} max={5} step={0.1} value={linkThickness} onChange={setThicknessDraft} />
+        <ForceSlider label={t("graphView.nodeSize")} min={0.1} max={5} step={0.1} value={nodeSize} onChange={setNodeSizeDraft} />
+        <ForceSlider label={t("graphView.textSize")} min={0.3} max={3} step={0.1} value={labelSize} onChange={setLabelSizeDraft} />
+        <ForceSlider label={t("graphView.linkThickness")} min={0.1} max={5} step={0.1} value={linkThickness} onChange={setThicknessDraft} />
 
         <p className="pt-2 pb-1.5 text-[11px] font-medium tracking-wide text-ob-faint uppercase">Forces</p>
-        <ForceSlider label="Center force" min={0} max={1} step={0.05} value={centerForce} onChange={setCenterDraft} />
-        <ForceSlider label="Repel force" min={0.1} max={8} step={0.1} value={repelForce} onChange={setRepelDraft} />
-        <ForceSlider label="Link force" min={0} max={2} step={0.1} value={linkForce} onChange={setLinkForceDraft} />
-        <ForceSlider label="Link distance" min={10} max={140} step={2} value={linkDistance} onChange={setDistDraft} />
+        <ForceSlider label={t("graphView.centerForce")} min={0} max={1} step={0.05} value={centerForce} onChange={setCenterDraft} />
+        <ForceSlider label={t("graphView.repelForce")} min={0.1} max={8} step={0.1} value={repelForce} onChange={setRepelDraft} />
+        <ForceSlider label={t("graphView.linkForce")} min={0} max={2} step={0.1} value={linkForce} onChange={setLinkForceDraft} />
+        <ForceSlider label={t("graphView.linkDistance")} min={10} max={140} step={2} value={linkDistance} onChange={setDistDraft} />
 
         <p className="pt-2 pb-1.5 text-[11px] font-medium tracking-wide text-ob-faint uppercase">Groups</p>
         {groups.map((g, i) => (
@@ -1816,7 +1818,7 @@ export function GraphView({ vaultId, centerNoteId, depth = 1, compact = false, f
             max={100}
             step={1}
             value={timePercent}
-            aria-label="Time travel"
+            aria-label={t("graphView.timeTravel")}
             onChange={(e) => {
               setPlaying(false);
               setTimePercent(Number(e.target.value));

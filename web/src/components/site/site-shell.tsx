@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { PublicSiteData } from "@/lib/api/public-server";
+import { useTranslation } from "@/lib/i18n";
 
 /**
  * Chrome for a published vault site: the note rail and the reading column.
@@ -20,6 +21,7 @@ export function SiteShell({
   children: React.ReactNode;
 }) {
   const href = (path: string) =>
+    const { t } = useTranslation();
     `/s/${site.slug}/${path.split("/").map(encodeURIComponent).join("/")}`;
 
   return (

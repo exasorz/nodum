@@ -12,8 +12,10 @@ import { useSearchParams } from "next/navigation";
 
 import { folderApi, noteApi, vaultApi } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useTranslation } from "@/lib/i18n";
 
 function todayStamp(): string {
+  const { t } = useTranslation();
   return new Date().toISOString().slice(0, 10);
 }
 

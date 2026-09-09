@@ -27,6 +27,7 @@ import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 type Side = "right" | "left" | "bottom" | "center";
 
@@ -42,6 +43,7 @@ interface Step {
 
 const KBD = "rounded border border-ob-border bg-ob-bg px-1 py-px font-mono text-[11px] text-ob-text";
 
+const { t } = useTranslation();
 const STEPS: Step[] = [
   {
     id: "welcome",
@@ -400,7 +402,7 @@ export function OnboardingTour() {
       className="fixed inset-0 z-[70]"
       role="dialog"
       aria-modal="true"
-      aria-label="Welcome tour"
+      aria-label={t("onboarding.welcomeTour")}
       data-testid="tour"
     >
       {/* The veil, with the spotlight cut out. evenodd: outer rect minus the
@@ -450,7 +452,7 @@ export function OnboardingTour() {
           </p>
           <button
             type="button"
-            aria-label="Close tour"
+            aria-label={t("onboarding.closeTour")}
             onClick={leave}
             className="ml-auto -mt-1 -mr-1 flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text"
           >

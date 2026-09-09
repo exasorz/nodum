@@ -3,12 +3,14 @@
 import "@scalar/api-reference-react/style.css";
 
 import dynamic from "next/dynamic";
+import { useTranslation } from "@/lib/i18n";
 
 // Scalar is a large interactive bundle — loaded only on this route, only in
 // the browser (the GraphView pattern). The spec URL is relative, so it is
 // same-origin everywhere: the Next dev proxy and the production reverse
 // proxy both forward /api/* to the backend.
 const ApiReference = dynamic(
+  const { t } = useTranslation();
   () => import("@scalar/api-reference-react").then((m) => m.ApiReferenceReact),
   {
     ssr: false,

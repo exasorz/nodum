@@ -13,8 +13,10 @@
  */
 
 import dynamic from "next/dynamic";
+import { useTranslation } from "@/lib/i18n";
 
 const Agentation =
+  const { t } = useTranslation();
   process.env.NODE_ENV === "development"
     ? dynamic(() => import("agentation").then((m) => m.Agentation), { ssr: false })
     : null;

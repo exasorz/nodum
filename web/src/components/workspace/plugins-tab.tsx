@@ -9,6 +9,7 @@
  * The permission list is shown before install so granting is a conscious act.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useState } from "react";
 
 import { usePlugins } from "@/lib/plugins/use-plugins";
@@ -23,6 +24,7 @@ import { useToastStore } from "@/lib/stores/toast-store";
 
 /** Accepts `{ "manifest": {...}, "code": "..." }` or a manifest with `code`. */
 function parseBundle(raw: string): InstalledPlugin | string {
+  const { t } = useTranslation();
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -119,7 +121,7 @@ export function PluginsTab({ vaultId }: { vaultId: string }) {
       )}
 
       {plugins.length === 0 && (
-        <p className="text-[13px] text-ob-faint">No plugins installed.</p>
+        <p className="text-[13px] text-ob-faint">{t("pluginsTab.noPlugins")}</p>
       )}
 
       <ul className="space-y-2">

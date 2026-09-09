@@ -5,6 +5,7 @@
  * CodeMirror 6 body with debounced autosave and wikilink navigation.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bookmark, BookOpen, Code2, Pencil } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -36,7 +37,10 @@ import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { cn } from "@/lib/utils";
 
 export function EditorPane({
-  vaultId,
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+vaultId,
   noteId,
   paneIndex,
 }: {
@@ -59,7 +63,7 @@ export function EditorPane({
 
   if (!note) {
     return (
-      <div className="flex h-full items-center justify-center text-[13px] text-ob-faint">Loading…</div>
+      <div className="flex h-full items-center justify-center text-[13px] text-ob-faint">{t("editorPane.loading")}</div>
     );
   }
 
@@ -170,7 +174,8 @@ function EditorBody({ vaultId, note, paneIndex }: { vaultId: string; note: Note;
     );
     collabRef.current = session;
     const onSync = (synced: boolean) => {
-      if (!synced) {
+  const { t } = useTranslation();
+if (!synced) {
         collabLiveRef.current = false;
         return;
       }
@@ -459,19 +464,19 @@ function EditorBody({ vaultId, note, paneIndex }: { vaultId: string; note: Note;
         <BookmarkButton vaultId={vaultId} noteId={note.id} />
         <ShareButton vaultId={vaultId} noteId={note.id} />
         <ModeButton
-          label="Live preview"
+          label={t("editorPane.livePreview")}
           active={mode === "live"}
           onClick={() => setMode("live")}
           icon={<Pencil className="size-3.5" strokeWidth={1.75} />}
         />
         <ModeButton
-          label="Source mode"
+          label={t("editorPane.sourceMode")}
           active={mode === "source"}
           onClick={() => setMode("source")}
           icon={<Code2 className="size-3.5" strokeWidth={1.75} />}
         />
         <ModeButton
-          label="Reading view"
+          label={t("editorPane.readingView")}
           active={mode === "reading"}
           onClick={() => setMode("reading")}
           icon={<BookOpen className="size-3.5" strokeWidth={1.75} />}
@@ -526,7 +531,7 @@ function EditorBody({ vaultId, note, paneIndex }: { vaultId: string; note: Note;
           <input
             ref={titleRef}
             value={title}
-            aria-label="Note title"
+            aria-label={t("editorPane.noteTitle")}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={() => {
               const t = title.trim();
@@ -541,7 +546,7 @@ function EditorBody({ vaultId, note, paneIndex }: { vaultId: string; note: Note;
           {mode === "reading" ? (
             <ReadingView content={draft} vaultId={vaultId} onNavigate={(t, opts) => void navigate(t, opts)} />
           ) : waitingForCollab ? (
-            <p className="pt-2 text-[13px] text-ob-faint">Connecting live session…</p>
+            <p className="pt-2 text-[13px] text-ob-faint">{t("editorPane.connectingLiveSession")}</p>
           ) : (
             <MarkdownEditor
               key={activeCollab ? `collab-${note.id}-${collabEpoch}` : editorEpoch}

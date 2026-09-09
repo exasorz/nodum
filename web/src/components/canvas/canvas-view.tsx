@@ -22,9 +22,11 @@ import { canvasApi, noteApi, searchApi } from "@/lib/api/endpoints";
 import type { CanvasData, CanvasEdge, CanvasNode } from "@/lib/api/types";
 import { useVaultSettings, type CanvasBackground } from "@/lib/hooks/use-vault-settings";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 
 /** Board background pattern that pans/zooms with the canvas. */
 function canvasBackgroundStyle(kind: CanvasBackground, offsetX: number, offsetY: number, scale: number): React.CSSProperties {
+  const { t } = useTranslation();
   if (kind === "blank") return {};
   const size = 24 * scale;
   const line = "var(--ob-background-modifier-border)";
@@ -359,7 +361,7 @@ export function CanvasView({ vaultId, canvasId }: { vaultId: string; canvasId: s
         <span className="mx-1 h-5 w-px bg-ob-border" />
         <button
           type="button"
-          aria-label="Export canvas"
+          aria-label={t("canvasView.exportCanvas")}
           onClick={exportCanvas}
           className="flex size-8 items-center justify-center rounded-md text-ob-muted hover:bg-ob-hover hover:text-ob-text"
         >
@@ -367,7 +369,7 @@ export function CanvasView({ vaultId, canvasId }: { vaultId: string; canvasId: s
         </button>
         <button
           type="button"
-          aria-label="Import canvas"
+          aria-label={t("canvasView.importCanvas")}
           onClick={() => importInput.current?.click()}
           className="flex size-8 items-center justify-center rounded-md text-ob-muted hover:bg-ob-hover hover:text-ob-text"
         >
@@ -399,7 +401,7 @@ export function CanvasView({ vaultId, canvasId }: { vaultId: string; canvasId: s
             value={noteQuery}
             onChange={(e) => setNoteQuery(e.target.value)}
             placeholder="Find a note…"
-            aria-label="Find a note for the canvas"
+            aria-label={t("canvasView.findNote")}
             className="mb-1 h-8 w-full rounded border border-ob-border bg-ob-bg px-2 text-[13px] text-ob-text outline-none"
           />
           {pickerResults?.map((r) => (
@@ -468,7 +470,7 @@ export function CanvasView({ vaultId, canvasId }: { vaultId: string; canvasId: s
                   <textarea
                     autoFocus
                     defaultValue={node.text ?? ""}
-                    aria-label="Card text"
+                    aria-label={t("canvasView.cardText")}
                     onKeyDown={(e) => {
                       if (e.key === "Escape") (e.target as HTMLTextAreaElement).blur();
                     }}
@@ -504,7 +506,7 @@ export function CanvasView({ vaultId, canvasId }: { vaultId: string; canvasId: s
               )}
               <div
                 role="presentation"
-                aria-label="Resize card"
+                aria-label={t("canvasView.resizeCard")}
                 onPointerDown={(e) => onResizeDown(e, node)}
                 className="absolute right-0 bottom-0 size-4 cursor-nwse-resize"
                 style={{ background: "linear-gradient(135deg, transparent 55%, var(--ob-background-modifier-border) 55%)" }}

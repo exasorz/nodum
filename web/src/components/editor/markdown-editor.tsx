@@ -2,6 +2,7 @@
 
 /** CodeMirror 6 markdown editor — mounted manually per DECISIONS.md §1.1. */
 
+import { useTranslation } from "@/lib/i18n";
 import { autocompletion, closeBrackets } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyField, historyKeymap, redo } from "@codemirror/commands";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
@@ -43,7 +44,9 @@ const HISTORY_CACHE_LIMIT = 24;
 const historyCache = new Map<string, HistorySnapshot>();
 
 function rememberHistory(key: string, state: EditorState) {
-  historyCache.delete(key);
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+historyCache.delete(key);
   historyCache.set(key, { json: state.toJSON({ history: historyField }), doc: state.doc.toString() });
   while (historyCache.size > HISTORY_CACHE_LIMIT) {
     const oldest = historyCache.keys().next().value;
@@ -158,7 +161,7 @@ export function MarkdownEditor({
         activateOnTyping: true,
       }),
       nodumEditorTheme,
-      placeholder("Start writing…"),
+      placeholder(t("editorPane.startWriting")),
       EditorView.lineWrapping,
       spellcheckCompartment.of(EditorView.contentAttributes.of({ spellcheck: String(spellcheck) })),
       gutterCompartment.of(showLineNumbers ? lineNumbers() : []),
@@ -225,6 +228,7 @@ export function MarkdownEditor({
   // reach CodeMirror's handlers, and right-clicking a table you can see is
   // exactly when the table commands need to be reachable.
   const syncCaretToPointer = (event: React.MouseEvent) => {
+  const { t } = useTranslation();
     const view = viewRef.current;
     if (!view) return;
     // Inside a rendered table the document caret is parked at the table's

@@ -39,6 +39,7 @@ import {
 } from "@/lib/api/endpoints";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 /** History windows offered as one-click chips. 0 is "future only". */
 const WINDOWS: { label: string; days: number }[] = [
@@ -53,6 +54,7 @@ const WINDOWS: { label: string; days: number }[] = [
 
 /** Gmail's fixed system labels, offered as chips; anything else is typed. */
 const COMMON_LABELS = [
+  const { t } = useTranslation();
   "INBOX",
   "STARRED",
   "IMPORTANT",
@@ -237,7 +239,7 @@ export function SyncSetup({
                 const parsed = Math.floor(Number(event.target.value));
                 if (parsed > 0) setDays(parsed);
               }}
-              aria-label="Custom number of days"
+              aria-label={t("liveSync.customDays")}
               placeholder="days"
               className="h-7 w-20 text-[12px]"
             />
@@ -329,7 +331,7 @@ export function SyncSetup({
                   }
                 }}
                 placeholder="Other label…"
-                aria-label="Add another label"
+                aria-label={t("liveSync.addLabel")}
                 className="h-7 w-28 text-[12px]"
               />
             </div>
@@ -363,7 +365,7 @@ export function SyncSetup({
               onChange={(event) => setExcludeSenders(event.target.value)}
               placeholder={"newsletter@shop.com\npromo-mail.com"}
               rows={3}
-              aria-label="Senders to skip"
+              aria-label={t("liveSync.sendersToSkip")}
               className="w-full rounded-md border border-ob-border bg-ob-bg px-2 py-1.5 font-mono text-[12px] text-ob-text placeholder:text-ob-faint"
             />
           </label>
@@ -407,7 +409,7 @@ export function SyncSetup({
                   value={threshold}
                   disabled={!linkPeople}
                   onChange={(event) => setThreshold(event.target.value)}
-                  aria-label="Appearances before a person is linked"
+                  aria-label={t("liveSync.appearancesBeforeLink")}
                   className="mx-1.5 inline-block h-6 w-14 text-[12px]"
                 />
                 times. Below that, names stay plain text.
@@ -516,7 +518,7 @@ export function ConnectedList({
   if (connections.length === 0) return null;
 
   return (
-    <section className="mb-6" aria-label="Connected accounts">
+    <section className="mb-6" aria-label={t("liveSync.connectedAccounts")}>
       <h3 className="mb-2 text-[11px] font-semibold tracking-wide text-ob-faint uppercase">
         Connected
       </h3>

@@ -7,6 +7,7 @@
  * offers nothing but copy and Done.
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy, KeyRound } from "lucide-react";
 import { useState } from "react";
@@ -33,6 +34,7 @@ const SCOPES = [
 ] as const;
 
 function CopyButton({ text, label }: { text: string; label: string }) {
+ text, label }: { text: string; label: string }) {  const { t } = useTranslation();
   const [done, setDone] = useState(false);
   return (
     <button
@@ -97,7 +99,7 @@ export function ApiKeyCreateModal({
         {!fresh ? (
           <>
             <DialogHeader>
-              <DialogTitle>Create an API key</DialogTitle>
+              <DialogTitle>{t("apiKeyCreate.title")}</DialogTitle>
               <DialogDescription>
                 A key is a password for one program. Name it after where it will live, and give it
                 only what it needs.
@@ -142,7 +144,7 @@ export function ApiKeyCreateModal({
                   ))}
                 </div>
                 {scopes.length === 0 && (
-                  <p className="text-[12px] text-red-400">Pick at least one scope.</p>
+                  <p className="text-[12px] text-red-400">{t("apiKeyCreate.pickOneScope")}</p>
                 )}
               </div>
             </div>
@@ -159,7 +161,7 @@ export function ApiKeyCreateModal({
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Copy your key now</DialogTitle>
+              <DialogTitle>{t("apiKeyCreate.copyTitle")}</DialogTitle>
               <DialogDescription>
                 This is the only time <span className="font-medium">{fresh.name}</span> is shown.
                 Close this dialog and it is gone for good — revoking and re-creating is the only way
@@ -171,13 +173,13 @@ export function ApiKeyCreateModal({
                 <code className="min-w-0 flex-1 font-mono text-[12px] text-ob-text [overflow-wrap:anywhere]">
                   {fresh.token}
                 </code>
-                <CopyButton text={fresh.token} label="Copy key" />
+                <CopyButton text={fresh.token} label={t("apiKeyCreate.copyKey")} />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Label>Try it</Label>
                   <span className="flex-1" />
-                  <CopyButton text={curl} label="Copy curl command" />
+                  <CopyButton text={curl} label={t("apiKeyCreate.copyCurlCommand")} />
                 </div>
                 <pre
                   data-testid="api-curl"

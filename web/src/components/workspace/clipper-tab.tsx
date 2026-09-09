@@ -2,6 +2,7 @@
 
 /** Web Clipper settings — issue and revoke the extension's scoped token. */
 
+import { useTranslation } from "@/lib/i18n";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -9,6 +10,7 @@ import { clipperApi } from "@/lib/api/endpoints";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 
 export function ClipperTab() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.push);
   // Shown once, right after minting — the server only keeps a hash.
@@ -37,7 +39,7 @@ export function ClipperTab() {
 
   return (
     <section className="space-y-3">
-      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">Web Clipper</h3>
+      <h3 className="text-[11px] font-medium tracking-wide text-ob-faint uppercase">{t("clipperTab.title")}</h3>
       <p className="text-[12px] text-ob-muted">
         Clip pages straight into this vault with the browser extension. The extension uses its own
         token — it can only create notes, never read or delete them, and revoking it here does not
@@ -93,12 +95,12 @@ export function ClipperTab() {
       </div>
 
       <ol className="list-decimal space-y-1 pl-4 text-[12px] text-ob-muted">
-        <li>Generate a token above and copy it.</li>
+        <li>{t("clipper.generateToken")}</li>
         <li>
           Load the <code className="text-ob-text">clipper/</code> folder as an unpacked extension
           (chrome://extensions → Developer mode → Load unpacked).
         </li>
-        <li>Open the extension, paste your server URL and the token, then Connect.</li>
+        <li>{t("clipperTab.connectInstruction")}</li>
       </ol>
     </section>
   );

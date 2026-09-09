@@ -16,9 +16,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Graph as CosmosGraph } from "@cosmos.gl/graph";
 
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 const SPACE = 4096;
 
+const { t } = useTranslation();
 /** Swatches, drawn from the logo's own strand. */
 const SWATCHES = [
   { name: "Azure", value: "#3790ff" },

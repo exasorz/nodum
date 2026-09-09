@@ -608,7 +608,507 @@ noteMenu: {
       canvasDeleteCard: "Delete the selected card (and its lines)",
       canvasFinishEditing: "Finish editing a card",
     },
+  
+  // editor-pane.tsx
+  editorPane: {
+    loading: "Loading…",
+    livePreview: "Live preview",
+    sourceMode: "Source mode",
+    readingView: "Reading view",
+    noteTitle: "Note title",
+    connectingLiveSession: "Connecting live session…",
+    attachmentNotFound: "Attachment not found.",
+    startWriting: "Start writing…",
   },
+
+  // backlinks-in-document.tsx
+  backlinks: {
+    backlinks: "Backlinks",
+    noBacklinks: "No backlinks yet.",
+  },
+
+  // plugins-tab.tsx
+  pluginsTab: {
+    noPlugins: "No plugins installed.",
+  },
+
+  // ribbon.tsx
+  ribbon: {
+    help: "Help",
+    toggleLeftSidebar: "Toggle left sidebar",
+    newNote: "New note",
+    quickSwitcher: "Quick switcher (⌘O)",
+    openGraphView: "Open graph view (⌘G)",
+    openDailyNote: "Open today's daily note",
+    commandPalette: "Command palette (⌘P)",
+    settings: "Settings (⌘,)",
+    logOut: "Log out",
+  },
+
+  // sidebar-right.tsx
+  sidebarRight: {
+    loadingGraph: "Loading graph…",
+    resizeRightSidebar: "Resize right sidebar",
+    openNoteBacklinks: "Open a note to see its backlinks.",
+    noBacklinks: "No backlinks yet.",
+    noneFound: "None found.",
+    openNoteOutgoing: "Open a note to see its outgoing links.",
+    noLinks: "This note has no links yet.",
+    noTags: "No tags in this vault yet.",
+    openNoteOutline: "Open a note to see its outline.",
+    noHeadings: "No headings in this note.",
+    openNoteLocalGraph: "Open a note to see its local graph.",
+    outline: "Outline",
+    relatedNotes: "Related notes",
+  },
+
+  // settings-modal.tsx
+  settingsModal: {
+    sections: "Settings sections",
+    runFromCommandPalette: "Run from the command palette (⌘P)",
+  },
+
+  // ai-settings-tab.tsx
+  aiSettingsTab: {
+    title: "AI",
+    aiProvider: "AI provider",
+    keysFor: "Keys for",
+  },
+
+  // workspace.tsx
+  workspace: {
+    openNavigation: "Open navigation",
+    settings: "Settings",
+    openPanels: "Open panels",
+    resizeSplit: "Resize split",
+    navigationDrawer: "Navigation drawer",
+    panelsDrawer: "Panels drawer",
+    noFileOpen: "No file is open",
+    loadingGraph: "Loading graph…",
+  },
+
+  // api-key-create-modal.tsx
+  apiKeyCreate: {
+    title: "Create an API key",
+    copyTitle: "Copy your key now",
+    pickOneScope: "Pick at least one scope.",
+    copyKey: "Copy key",
+    copyCurlCommand: "Copy curl command",
+  },
+
+  // note-breadcrumb.tsx
+  noteBreadcrumb: {
+    noteLocation: "Note location",
+    notePath: "Note path",
+    clickToRename: "Click to rename",
+    renameNote: "Rename note",
+  },
+
+  // vault-switcher.tsx
+  vaultSwitcher: {
+    vaultName: "Vault name",
+  },
+
+  // mcp-settings-tab.tsx
+  mcpSettings: {
+    copyServerUrl: "Copy server URL",
+    copyToken: "Copy token",
+  },
+
+  // demo-workspace-offer.tsx
+  demoWorkspace: {
+    seeHowNodumWorks: "See how Nodum works with real notes and links.",
+    mapsOfContent: "Maps of content to start from",
+    colouredFolders: "Coloured folders and graph groups",
+    dailyNotes: "Daily notes and templates",
+  },
+
+  // canvases-section.tsx
+  canvases: {
+    newCanvas: "New canvas",
+    canvasName: "Canvas name",
+    noCanvases: "No canvases yet.",
+  },
+
+  // tab-bar.tsx
+  tabBar: {
+    newTab: "New tab",
+    splitRight: "Split right",
+  },
+
+  // onboarding-tour.tsx
+  onboarding: {
+    welcomeTour: "Welcome tour",
+    closeTour: "Close tour",
+  },
+
+  // confirm-dialog.tsx
+  confirm: {
+    areYouSure: "Are you sure?",
+  },
+
+  // ai-chat-pane.tsx
+  aiChat: {
+    loading: "Loading…",
+    notSetUp: "AI is not set up yet",
+    chatHistory: "Chat history",
+    nothingSaved: "Nothing saved yet.",
+    newChat: "New chat",
+    messageAssistant: "Message the assistant",
+    send: "Send",
+    assistant: "Assistant",
+  },
+
+  // nav-arrows.tsx
+  navArrows: {
+    navigateBack: "Navigate back (⌘[)",
+    back: "Back (⌘[)",
+    navigateForward: "Navigate forward (⌘])",
+    forward: "Forward (⌘])",
+  },
+
+  // quick-switcher.tsx
+  quickSwitcher: {
+    title: "Quick switcher",
+  },
+
+  // template-picker.tsx
+  templatePicker: {
+    insertTemplate: "Insert template",
+  },
+
+  // language-selector.tsx
+  languageSelector: {
+    language: "Language",
+  },
+
+  // clipper-tab.tsx
+  clipperTab: {
+    title: "Web Clipper",
+    connectInstruction: "Open the extension, paste your server URL and the token, then Connect.",
+  },
+
+  // share-button.tsx
+  shareButton: {
+    shareNote: "Share note",
+    copyLink: "Copy link",
+    publicNote: "This note is public",
+  },
+
+  // api-keys-tab.tsx
+  apiKeys: {
+    copyBaseUrl: "Copy base URL",
+    copyToken: "Copy token",
+    copyCurlCommand: "Copy curl command",
+    freshKeyMessage: "A fresh key drops straight into this shape.",
+  },
+
+  // toaster.tsx
+  toaster: {
+    dismiss: "Dismiss",
+  },
+
+  // delete-account.tsx
+  deleteAccount: {
+    dangerZone: "Danger zone",
+  },
+
+  // vaults-section.tsx
+  vaultsSection: {
+    vaults: "Vaults",
+  },
+
+  // version-history.tsx
+  versionHistory: {
+    noVersions: "No versions yet — keep editing.",
+  },
+
+  // markdown-box.tsx (forum)
+  markdownBox: {
+    nothingToPreview: "Nothing to preview yet.",
+  },
+
+  // editor-pane.tsx
+  editorPane: {
+    loading: "Loading…",
+    livePreview: "Live preview",
+    sourceMode: "Source mode",
+    readingView: "Reading view",
+    noteTitle: "Note title",
+    connectingLiveSession: "Connecting live session…",
+    attachmentNotFound: "Attachment not found.",
+    startWriting: "Start writing…",
+  },
+
+  // backlinks-in-document.tsx
+  backlinks: {
+    backlinks: "Backlinks",
+    noBacklinks: "No backlinks yet.",
+  },
+
+  // plugins-tab.tsx
+  pluginsTab: {
+    noPlugins: "No plugins installed.",
+  },
+
+  // ribbon.tsx
+  ribbon: {
+    help: "Help",
+    toggleLeftSidebar: "Toggle left sidebar",
+    newNote: "New note",
+    quickSwitcher: "Quick switcher (⌘O)",
+    openGraphView: "Open graph view (⌘G)",
+    openDailyNote: "Open today's daily note",
+    commandPalette: "Command palette (⌘P)",
+    settings: "Settings (⌘,)",
+    logOut: "Log out",
+  },
+
+  // sidebar-right.tsx
+  sidebarRight: {
+    loadingGraph: "Loading graph…",
+    resizeRightSidebar: "Resize right sidebar",
+    openNoteBacklinks: "Open a note to see its backlinks.",
+    noBacklinks: "No backlinks yet.",
+    noneFound: "None found.",
+    openNoteOutgoing: "Open a note to see its outgoing links.",
+    noLinks: "This note has no links yet.",
+    noTags: "No tags in this vault yet.",
+    openNoteOutline: "Open a note to see its outline.",
+    noHeadings: "No headings in this note.",
+    openNoteLocalGraph: "Open a note to see its local graph.",
+    outline: "Outline",
+    relatedNotes: "Related notes",
+  },
+
+  // settings-modal.tsx
+  settingsModal: {
+    sections: "Settings sections",
+    runFromCommandPalette: "Run from the command palette (⌘P)",
+  },
+
+  // ai-settings-tab.tsx
+  aiSettingsTab: {
+    title: "AI",
+    aiProvider: "AI provider",
+    keysFor: "Keys for",
+  },
+
+  // workspace.tsx
+  workspace: {
+    openNavigation: "Open navigation",
+    settings: "Settings",
+    openPanels: "Open panels",
+    resizeSplit: "Resize split",
+    navigationDrawer: "Navigation drawer",
+    panelsDrawer: "Panels drawer",
+    noFileOpen: "No file is open",
+    loadingGraph: "Loading graph…",
+  },
+
+  // api-key-create-modal.tsx
+  apiKeyCreate: {
+    title: "Create an API key",
+    copyTitle: "Copy your key now",
+    pickOneScope: "Pick at least one scope.",
+    copyKey: "Copy key",
+    copyCurlCommand: "Copy curl command",
+  },
+
+  // note-breadcrumb.tsx
+  noteBreadcrumb: {
+    noteLocation: "Note location",
+    notePath: "Note path",
+    clickToRename: "Click to rename",
+    renameNote: "Rename note",
+  },
+
+  // vault-switcher.tsx
+  vaultSwitcher: {
+    vaultName: "Vault name",
+  },
+
+  // mcp-settings-tab.tsx
+  mcpSettings: {
+    copyServerUrl: "Copy server URL",
+    copyToken: "Copy token",
+  },
+
+  // demo-workspace-offer.tsx
+  demoWorkspace: {
+    seeHowNodumWorks: "See how Nodum works with real notes and links.",
+    mapsOfContent: "Maps of content to start from",
+    colouredFolders: "Coloured folders and graph groups",
+    dailyNotes: "Daily notes and templates",
+  },
+
+  // canvases-section.tsx
+  canvases: {
+    newCanvas: "New canvas",
+    canvasName: "Canvas name",
+    noCanvases: "No canvases yet.",
+  },
+
+  // tab-bar.tsx
+  tabBar: {
+    newTab: "New tab",
+    splitRight: "Split right",
+  },
+
+  // onboarding-tour.tsx
+  onboarding: {
+    welcomeTour: "Welcome tour",
+    closeTour: "Close tour",
+  },
+
+  // confirm-dialog.tsx
+  confirm: {
+    areYouSure: "Are you sure?",
+  },
+
+  // ai-chat-pane.tsx
+  aiChat: {
+    loading: "Loading…",
+    notSetUp: "AI is not set up yet",
+    chatHistory: "Chat history",
+    nothingSaved: "Nothing saved yet.",
+    newChat: "New chat",
+    messageAssistant: "Message the assistant",
+    send: "Send",
+    assistant: "Assistant",
+  },
+
+  // nav-arrows.tsx
+  navArrows: {
+    navigateBack: "Navigate back (⌘[)",
+    back: "Back (⌘[)",
+    navigateForward: "Navigate forward (⌘])",
+    forward: "Forward (⌘])",
+  },
+
+  // quick-switcher.tsx
+  quickSwitcher: {
+    title: "Quick switcher",
+  },
+
+  // template-picker.tsx
+  templatePicker: {
+    insertTemplate: "Insert template",
+  },
+
+  // language-selector.tsx
+  languageSelector: {
+    language: "Language",
+  },
+
+  // clipper-tab.tsx
+  clipperTab: {
+    title: "Web Clipper",
+    connectInstruction: "Open the extension, paste your server URL and the token, then Connect.",
+  },
+
+  // share-button.tsx
+  shareButton: {
+    shareNote: "Share note",
+    copyLink: "Copy link",
+    publicNote: "This note is public",
+  },
+
+  // api-keys-tab.tsx
+  apiKeys: {
+    copyBaseUrl: "Copy base URL",
+    copyToken: "Copy token",
+    copyCurlCommand: "Copy curl command",
+    freshKeyMessage: "A fresh key drops straight into this shape.",
+  },
+
+  // toaster.tsx
+  toaster: {
+    dismiss: "Dismiss",
+  },
+
+  // delete-account.tsx
+  deleteAccount: {
+    dangerZone: "Danger zone",
+  },
+
+  // vaults-section.tsx
+  vaultsSection: {
+    vaults: "Vaults",
+  },
+
+  // version-history.tsx
+  versionHistory: {
+    noVersions: "No versions yet — keep editing.",
+  },
+
+  // markdown-box.tsx (forum)
+  markdownBox: {
+    nothingToPreview: "Nothing to preview yet.",
+  },
+
+  // graph-view.tsx
+  graphView: {
+    searchGraph: "Search graph",
+    clearSearch: "Clear search",
+    rearrangeSphere: "Re-arrange graph into a sphere",
+    resetSettings: "Reset graph settings",
+    settings: "Graph settings",
+    timeTravel: "Time travel",
+    nodeSize: "Node size",
+    textSize: "Text size",
+    linkThickness: "Link thickness",
+    centerForce: "Center force",
+    repelForce: "Repel force",
+    linkForce: "Link force",
+    linkDistance: "Link distance",
+  },
+
+  // canvas-view.tsx
+  canvasView: {
+    exportCanvas: "Export canvas",
+    importCanvas: "Import canvas",
+    findNote: "Find a note for the canvas",
+    cardText: "Card text",
+    resizeCard: "Resize card",
+  },
+
+  // import-dialog.tsx
+  importDialog: {
+    backToAllSources: "Back to all sources",
+    searchImportSources: "Search import sources",
+    liveSync: "Live sync",
+  },
+
+  // folder-picker.tsx
+  folderPicker: {
+    newFolderName: "New folder name",
+  },
+
+  // live-sync.tsx
+  liveSync: {
+    customDays: "Custom number of days",
+    addLabel: "Add another label",
+    sendersToSkip: "Senders to skip",
+    appearancesBeforeLink: "Appearances before a person is linked",
+    connectedAccounts: "Connected accounts",
+  },
+
+  // staff-tools.tsx (forum)
+  staffTools: {
+    reason: "Reason",
+    reportDetail: "Report detail",
+  },
+
+  // engagement.tsx (forum)
+  engagement: {
+    newSinceLastRead: "New since you last read",
+  },
+
+  // markdown-box.tsx (forum)
+  // markdownBox.nothingToPreview already added above
+  // markdownBox.markdown already added above
+},
 } as const;
 
 export type EnTranslations = typeof en;

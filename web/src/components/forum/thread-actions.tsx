@@ -12,9 +12,11 @@ import { useState } from "react";
 import { MarkdownBox } from "@/components/forum/markdown-box";
 import { communityApi } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useTranslation } from "@/lib/i18n";
 
 export function ReplyBox({ topicId, locked }: { topicId: string; locked: boolean }) {
   const status = useAuthStore((s) => s.status);
+  const { t } = useTranslation();
   const router = useRouter();
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);

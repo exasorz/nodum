@@ -34,6 +34,7 @@ import {
 } from "@/lib/api/endpoints";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 /**
  * The import picker.
@@ -58,6 +59,7 @@ export function ImportDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [picked, setPicked] = useState<ImportSource | null>(null);
   const [syncPick, setSyncPick] = useState<SyncProvider | null>(null);
@@ -192,7 +194,7 @@ export function ImportDialog({
               <button
                 type="button"
                 onClick={reset}
-                aria-label="Back to all sources"
+                aria-label={t("importDialog.backToAllSources")}
                 className="-ml-1 rounded p-1 text-ob-muted hover:bg-ob-hover hover:text-ob-text"
               >
                 <ArrowLeft className="size-4" />
@@ -202,7 +204,7 @@ export function ImportDialog({
               <button
                 type="button"
                 onClick={reset}
-                aria-label="Back to all sources"
+                aria-label={t("importDialog.backToAllSources")}
                 className="-ml-1 rounded p-1 text-ob-muted hover:bg-ob-hover hover:text-ob-text"
               >
                 <ArrowLeft className="size-4" />
@@ -343,7 +345,7 @@ function PickerGrid({
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder={total ? `Search ${String(total)} sources…` : "Search sources…"}
-          aria-label="Search import sources"
+          aria-label={t("importDialog.searchImportSources")}
           className="h-9 pl-8 text-[13px]"
           autoFocus
         />
@@ -403,7 +405,7 @@ function LiveSyncSection({
   const connectedIds = new Set(connections.map((c) => c.provider));
 
   return (
-    <section className="mb-6" aria-label="Live sync">
+    <section className="mb-6" aria-label={t("importDialog.liveSync")}>
       <h3 className="mb-2 text-[11px] font-semibold tracking-wide text-ob-faint uppercase">
         Live sync
       </h3>

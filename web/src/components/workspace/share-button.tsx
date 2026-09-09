@@ -12,9 +12,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { publishApi } from "@/lib/api/endpoints";
 import { toastError } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 export function ShareButton({ vaultId, noteId }: { vaultId: string; noteId: string }) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const { data: status } = useQuery({
@@ -49,7 +51,7 @@ export function ShareButton({ vaultId, noteId }: { vaultId: string; noteId: stri
           <PopoverTrigger asChild>
             <button
               type="button"
-              aria-label="Share note"
+              aria-label={t("shareButton.shareNote")}
               className={cn(
                 "flex size-6 items-center justify-center rounded transition-colors duration-150",
                 status?.published
@@ -71,12 +73,12 @@ export function ShareButton({ vaultId, noteId }: { vaultId: string; noteId: stri
       <PopoverContent align="end" className="w-80 border-ob-border bg-ob-sidebar">
         {status?.published && publicUrl ? (
           <div className="space-y-3">
-            <p className="text-[13px] font-medium text-ob-text">This note is public</p>
+            <p className="text-[13px] font-medium text-ob-text">{t("shareButton.publicNote")}</p>
             <div className="flex items-center gap-1.5">
               <code className="min-w-0 flex-1 truncate rounded bg-ob-bg px-2 py-1.5 text-[12px] text-ob-muted">
                 {publicUrl}
               </code>
-              <Button size="sm" variant="outline" onClick={() => void copyLink()} aria-label="Copy link">
+              <Button size="sm" variant="outline" onClick={() => void copyLink()} aria-label={t("shareButton.copyLink")}>
                 {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
               </Button>
             </div>

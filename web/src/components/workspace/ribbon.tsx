@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import { useTranslation } from "@/lib/i18n";;
 
 /** Left ribbon — Obsidian's narrow vertical icon strip. */
 
@@ -30,7 +32,9 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 function RibbonButton({
-  label,
+  const { t } = useTranslation();
+  const { t } = useTranslation();
+label,
   onClick,
   tour,
   children,
@@ -70,7 +74,7 @@ function HelpMenu() {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              aria-label="Help"
+              aria-label={t("ribbon.help")}
               data-tour="help"
               className="flex size-7 items-center justify-center rounded-md text-ob-muted transition-colors duration-150 hover:bg-ob-hover hover:text-ob-text"
             >
@@ -78,7 +82,7 @@ function HelpMenu() {
             </button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent side="right">Help</TooltipContent>
+        <TooltipContent side="right">{t("ribbon.help")}</TooltipContent>
       </Tooltip>
       <DropdownMenuContent
         side="right"
@@ -110,7 +114,8 @@ function HelpMenu() {
 }
 
 export function Ribbon({
-  onNewNote,
+  const { t } = useTranslation();
+onNewNote,
   onOpenGraph,
   onOpenDailyNote,
   onOpenSettings,
@@ -128,35 +133,35 @@ export function Ribbon({
 
   return (
     <aside data-tour="ribbon" className="flex w-11 shrink-0 flex-col items-center gap-1.5 border-r border-ob-border bg-ob-sidebar pt-2 pb-3">
-      <RibbonButton label="Toggle left sidebar" onClick={toggleLeftSidebar}>
+      <RibbonButton label={t("ribbon.toggleLeftSidebar")} onClick={toggleLeftSidebar}>
         <PanelLeft className="size-[18px]" strokeWidth={1.75} />
       </RibbonButton>
-      <RibbonButton label="New note" onClick={onNewNote}>
+      <RibbonButton label={t("ribbon.newNote")} onClick={onNewNote}>
         <SquarePen className="size-[18px]" strokeWidth={1.75} />
       </RibbonButton>
-      <RibbonButton label="Quick switcher (⌘O)" tour="switcher" onClick={() => setSwitcherOpen(true)}>
+      <RibbonButton label={t("ribbon.quickSwitcher")} tour="switcher" onClick={() => setSwitcherOpen(true)}>
         <Search className="size-[18px]" strokeWidth={1.75} />
       </RibbonButton>
-      <RibbonButton label="Open graph view (⌘G)" tour="graph" onClick={onOpenGraph}>
+      <RibbonButton label={t("ribbon.openGraphView")} tour="graph" onClick={onOpenGraph}>
         <GitFork className="size-[18px] rotate-90" strokeWidth={1.75} />
       </RibbonButton>
       {onOpenDailyNote && (
-        <RibbonButton label="Open today's daily note" onClick={onOpenDailyNote}>
+        <RibbonButton label={t("ribbon.openDailyNote")} onClick={onOpenDailyNote}>
           <CalendarDays className="size-[18px]" strokeWidth={1.75} />
         </RibbonButton>
       )}
-      <RibbonButton label="Command palette (⌘P)" tour="palette" onClick={() => setPaletteOpen(true)}>
+      <RibbonButton label={t("ribbon.commandPalette")} tour="palette" onClick={() => setPaletteOpen(true)}>
         <Command className="size-[18px]" strokeWidth={1.75} />
       </RibbonButton>
 
       <div className="flex-1" />
 
       <HelpMenu />
-      <RibbonButton label="Settings (⌘,)" onClick={onOpenSettings}>
+      <RibbonButton label={t("ribbon.settings")} onClick={onOpenSettings}>
         <Settings className="size-[18px]" strokeWidth={1.75} />
       </RibbonButton>
       <RibbonButton
-        label="Log out"
+        label={t("ribbon.logOut")}
         onClick={async () => {
           await logout();
           router.replace("/");

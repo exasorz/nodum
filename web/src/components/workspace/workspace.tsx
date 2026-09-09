@@ -419,7 +419,7 @@ export function Workspace({ vault }: { vault: Vault }) {
         <header className="flex h-12 shrink-0 items-center gap-1 border-b border-ob-border bg-ob-sidebar px-2 md:hidden">
           <button
             type="button"
-            aria-label="Open navigation"
+            aria-label={t("workspace.openNavigation")}
             onClick={() => setMobileLeftOpen(true)}
             className="flex size-10 items-center justify-center rounded-md text-ob-muted hover:bg-ob-hover"
           >
@@ -430,7 +430,7 @@ export function Workspace({ vault }: { vault: Vault }) {
           </span>
           <button
             type="button"
-            aria-label="Settings"
+            aria-label={t("workspace.settings")}
             onClick={() => setSettingsOpen(true)}
             className="flex size-10 items-center justify-center rounded-md text-ob-muted hover:bg-ob-hover"
           >
@@ -438,7 +438,7 @@ export function Workspace({ vault }: { vault: Vault }) {
           </button>
           <button
             type="button"
-            aria-label="Open panels"
+            aria-label={t("workspace.openPanels")}
             onClick={() => setMobileRightOpen(true)}
             className="flex size-10 items-center justify-center rounded-md text-ob-muted hover:bg-ob-hover"
           >
@@ -525,7 +525,7 @@ export function Workspace({ vault }: { vault: Vault }) {
           <div
             role="separator"
             aria-orientation={isColumnSplit ? "horizontal" : "vertical"}
-            aria-label="Resize split"
+            aria-label={t("workspace.resizeSplit")}
             aria-valuenow={Math.round(splitRatio * 100)}
             onPointerDown={onSplitDragStart}
             onDoubleClick={() => setSplitRatio(0.5)}
@@ -554,7 +554,7 @@ export function Workspace({ vault }: { vault: Vault }) {
           <div
             className="absolute top-0 left-0 h-full w-[85vw] max-w-[320px] shadow-2xl"
             role="dialog"
-            aria-label="Navigation drawer"
+            aria-label={t("workspace.navigationDrawer")}
             onClick={(e) => e.stopPropagation()}
           >
             <SidebarLeft
@@ -576,7 +576,7 @@ export function Workspace({ vault }: { vault: Vault }) {
           <div
             className="absolute top-0 right-0 h-full w-[85vw] max-w-[320px] shadow-2xl"
             role="dialog"
-            aria-label="Panels drawer"
+            aria-label={t("workspace.panelsDrawer")}
             onClick={(e) => e.stopPropagation()}
           >
             <SidebarRight drawer vaultId={vault.id} noteId={activeNoteId} onOpenNote={openNote} />
@@ -649,7 +649,7 @@ export function Workspace({ vault }: { vault: Vault }) {
 function EmptyState({ onNewNote }: { onNewNote: () => void }) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2">
-      <p className="text-[15px] text-ob-faint">No file is open</p>
+      <p className="text-[15px] text-ob-faint">{t("workspace.noFileOpen")}</p>
       <button
         type="button"
         onClick={onNewNote}

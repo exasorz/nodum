@@ -7,6 +7,7 @@
  * excerpt near the pointer. Display-only (pointer-events: none).
  */
 
+import { useTranslation } from "@/lib/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useRef, useState } from "react";
 
@@ -29,6 +30,7 @@ const MAX_HEIGHT = 280;
 
 /** Strip frontmatter and cap length — the popover is a peek, not the note. */
 function excerpt(content: string): string {
+  const { t } = useTranslation();
   const body = content.replace(/^---\n[\s\S]*?\n(?:---|\.\.\.)\n?/, "").trimStart();
   return body.length > 700 ? `${body.slice(0, 700)}…` : body;
 }
@@ -127,7 +129,7 @@ export function PagePreview({ vaultId, anchor }: { vaultId: string; anchor: Prev
           </div>
         </>
       ) : (
-        <p className="text-[13px] text-ob-faint">Loading…</p>
+        <p className="text-[13px] text-ob-faint">{t("editorPane.loading")}</p>
       )}
     </div>
   );

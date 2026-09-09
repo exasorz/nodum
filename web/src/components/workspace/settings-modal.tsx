@@ -290,7 +290,7 @@ export function SettingsModal({ vaultId, open, onOpenChange }: SettingsModalProp
 
         <div className="flex h-[min(660px,82vh)] min-h-0 flex-col sm:flex-row">
           <nav
-            aria-label="Settings sections"
+            aria-label={t("settingsModal.sections")}
             className="flex shrink-0 flex-row gap-0.5 overflow-x-auto border-b border-ob-border p-2 sm:w-44 sm:flex-col sm:overflow-x-visible sm:overflow-y-auto sm:border-r sm:border-b-0"
           >
             {TABS.map((tabValue) => (
@@ -874,7 +874,7 @@ function HotkeysTab({ query, onQuery }: { query: string; onQuery: (q: string) =>
                 </kbd>
               ) : (
                 <span
-                  title="Run from the command palette (⌘P)"
+                  title={t("settingsModal.runFromCommandPalette")}
                   className="shrink-0 rounded border border-dashed border-ob-border px-1.5 py-0.5 text-[11px] text-ob-faint/70"
                 >
                   ⌘P

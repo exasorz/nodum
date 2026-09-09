@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import { dailyApi } from "@/lib/api/endpoints";
 import { toastError } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 
 interface TemplatePickerProps {
   vaultId: string;
@@ -26,6 +27,7 @@ interface TemplatePickerProps {
 export function TemplatePicker({ vaultId, noteId, open, onOpenChange }: TemplatePickerProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation();
   const { data: templates } = useQuery({
     queryKey: ["templates", vaultId],
     queryFn: () => dailyApi.listTemplates(vaultId),
@@ -47,7 +49,7 @@ export function TemplatePicker({ vaultId, noteId, open, onOpenChange }: Template
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Insert template"
+      title={t("templatePicker.insertTemplate")}
       description="Pick a template note"
       className="border border-ob-border bg-[var(--ob-color-base-25)] shadow-2xl sm:max-w-[480px]"
     >

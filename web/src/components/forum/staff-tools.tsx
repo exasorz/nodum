@@ -9,9 +9,11 @@ import { useState } from "react";
 
 import { communityApi } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useTranslation } from "@/lib/i18n";
 
 export function ReportButton({ postId, authorId }: { postId: string; authorId: string | null }) {
   const user = useAuthStore((s) => s.user);
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("spam");
   const [detail, setDetail] = useState("");
@@ -30,7 +32,7 @@ export function ReportButton({ postId, authorId }: { postId: string; authorId: s
   }
   return (
     <span className="inline-flex flex-wrap items-center gap-2 text-[0.8rem]">
-      <select value={reason} onChange={(e) => setReason(e.target.value)} className="mk-card px-2 py-1" aria-label="Reason">
+      <select value={reason} onChange={(e) => setReason(e.target.value)} className="mk-card px-2 py-1" aria-label={t("staffTools.reason")}>
         <option value="spam">Spam</option>
         <option value="abuse">Abuse</option>
         <option value="off-topic">Off topic</option>
@@ -41,7 +43,7 @@ export function ReportButton({ postId, authorId }: { postId: string; authorId: s
         onChange={(e) => setDetail(e.target.value)}
         placeholder="Anything staff should know (optional)"
         className="mk-card w-60 px-2 py-1"
-        aria-label="Report detail"
+        aria-label={t("staffTools.reportDetail")}
       />
       <button
         type="button"

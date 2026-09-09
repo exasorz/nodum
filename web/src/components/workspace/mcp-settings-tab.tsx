@@ -20,9 +20,11 @@ import { mcpApi } from "@/lib/api/endpoints";
 import { DOCS_URL } from "@/lib/app-meta";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 const TOKEN_PLACEHOLDER = "<your token>";
 
+const { t } = useTranslation();
 /** The config snippets, with the real endpoint and the token slot. */
 function snippets(endpoint: string, token: string) {
   const bearer = `Bearer ${token}`;
@@ -142,7 +144,7 @@ export function McpSettingsTab() {
           <code className="min-w-0 flex-1 rounded border border-ob-border bg-ob-bg px-2 py-1.5 font-mono text-[12px] text-ob-text [overflow-wrap:anywhere]">
             {endpoint}
           </code>
-          <CopyButton text={endpoint} label="Copy server URL" />
+          <CopyButton text={endpoint} label={t("mcpSettings.copyServerUrl")} />
         </div>
       </div>
 
@@ -181,7 +183,7 @@ export function McpSettingsTab() {
               <code className="min-w-0 flex-1 font-mono text-[12px] text-ob-text [overflow-wrap:anywhere]">
                 {fresh.token}
               </code>
-              <CopyButton text={fresh.token} label="Copy token" />
+              <CopyButton text={fresh.token} label={t("mcpSettings.copyToken")} />
             </div>
           </div>
         )}

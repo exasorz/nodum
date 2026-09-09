@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { versionApi } from "@/lib/api/endpoints";
 import type { Note } from "@/lib/api/types";
+import { useTranslation } from "@/lib/i18n";
 
 function formatWhen(iso: string): string {
+  const { t } = useTranslation();
   const d = new Date(iso);
   return `${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })} · ${d.toLocaleTimeString(
     undefined,
@@ -66,7 +68,7 @@ export function VersionHistoryDialog({
         </DialogHeader>
         <div className="max-h-[320px] space-y-1 overflow-y-auto">
           {versions && versions.length === 0 && !isFetching && (
-            <p className="px-1 py-2 text-[13px] text-ob-faint">No versions yet — keep editing.</p>
+            <p className="px-1 py-2 text-[13px] text-ob-faint">{t("versionHistory.noVersions")}</p>
           )}
           {versions?.map((v) => (
             <div
