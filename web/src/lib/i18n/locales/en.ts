@@ -205,6 +205,7 @@ export const en = {
     resizeSidebar: "Resize sidebar",
   },
   fileExplorer: {
+    fileExplorer: "File explorer",
     newNote: "New note",
     newFolder: "New folder",
     changeSort: "Change sort order",

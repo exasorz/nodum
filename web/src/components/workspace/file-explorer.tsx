@@ -46,6 +46,7 @@ import type { TreeItem, Vault } from "@/lib/api/types";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import { type ExplorerSort, useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { PickerDialog } from "./picker-dialog";
+import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const ROW_HEIGHT = 26;
@@ -202,7 +203,7 @@ async function copyPath(path: string) {
     await navigator.clipboard.writeText(path);
     toast("Path copied");
   } catch {
-    toastError(null, "Could not copy path.");
+    toastError(null, "Could not copy path.")
   }
 }
 
@@ -214,9 +215,10 @@ function ColorSubmenu({
   current?: string;
   onPick: (color: string | null) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <ContextMenuSub>
-      <ContextMenuSubTrigger>Colour</ContextMenuSubTrigger>
+      <ContextMenuSubTrigger>{t("fileExplorer.colors.colour")}</ContextMenuSubTrigger>
       <ContextMenuSubContent className="w-40">
         {ITEM_COLORS.map((c) => (
           <ContextMenuItem key={c.value} onClick={() => onPick(c.value)}>
@@ -230,7 +232,7 @@ function ColorSubmenu({
           </ContextMenuItem>
         ))}
         <ContextMenuSeparator />
-        <ContextMenuItem onClick={() => onPick(null)}>None</ContextMenuItem>
+        <ContextMenuItem onClick={() => onPick(null)}>{t("fileExplorer.colors.none")}</ContextMenuItem>
       </ContextMenuSubContent>
     </ContextMenuSub>
   );
@@ -245,6 +247,7 @@ function TagSubmenu({
   vaultId: string;
   onAdd: (tag: string) => void;
 }) {
+  const { t } = useTranslation();
   const { data: tags } = useQuery({
     queryKey: ["tags", vaultId],
     queryFn: () => searchApi.tags(vaultId),
@@ -252,12 +255,12 @@ function TagSubmenu({
   const [draft, setDraft] = useState("");
   return (
     <ContextMenuSub>
-      <ContextMenuSubTrigger>Tags</ContextMenuSubTrigger>
+      <ContextMenuSubTrigger>{t("fileExplorer.tags.tags")}</ContextMenuSubTrigger>
       <ContextMenuSubContent className="w-56">
         <div className="p-1">
           <input
             value={draft}
-            placeholder="New tag + Enter"
+            placeholder={t("fileExplorer.tags.newTagPlaceholder")}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
               e.stopPropagation();
@@ -277,7 +280,7 @@ function TagSubmenu({
             </ContextMenuItem>
           ))}
           {(tags ?? []).length === 0 && (
-            <p className="px-2 py-1.5 text-[12px] text-ob-faint">No tags yet.</p>
+            <p className="px-2 py-1.5 text-[12px] text-ob-faint">{t("fileExplorer.tags.noTags")}</p>
           )}
         </div>
       </ContextMenuSubContent>
@@ -289,6 +292,7 @@ function TagSubmenu({
  *  with…" (notes). Keeps both flows to one keyboard-friendly dialog. */
 
 export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProps) {
+  const { t } = useTranslation();
   // Rows are virtualized: one scrolled out from under the pointer never fires
   // its mouseleave, so drop the hover when the list itself goes away.
   useEffect(() => () => setNoteHover(null), []);
@@ -347,7 +351,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
     mutationFn: (noteId: string) => bookmarkApi.add(vaultId, noteId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["bookmarks", vaultId] });
-      toast("Bookmarked");
+      toast(t("fileExplorer.toast.bookmarked"));
     },
     onError: (e) => toastError(e, "Could not bookmark."),
   });
@@ -358,7 +362,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
     onSuccess: (note) => {
       void queryClient.invalidateQueries({ queryKey: ["tags", vaultId] });
       void queryClient.invalidateQueries({ queryKey: ["note", vaultId, note.id] });
-      toast("Tag added");
+      toast(t("fileExplorer.toast.tagAdded"));
     },
     onError: (e) => toastError(e, "Could not add tag."),
   });
@@ -395,7 +399,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
       // The graph carries each node's folder — a move changes which folder
       // colour the node inherits, so refetch it too.
       void queryClient.invalidateQueries({ queryKey: ["graph", vaultId] });
-      toast("Moved");
+      toast(t("fileExplorer.toast.moved"));
     },
     onError: (e) => toastError(e, "Could not move note."),
   });
@@ -419,7 +423,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
       void queryClient.invalidateQueries({ queryKey: ["note", vaultId, target.id] });
       void queryClient.invalidateQueries({ queryKey: ["graph", vaultId] });
       onOpenNote(target.id, target.title);
-      toast("Merged");
+      toast(t("fileExplorer.toast.merged"));
     },
     onError: (e) => toastError(e, "Could not merge notes."),
   });
@@ -685,11 +689,11 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
   };
 
   return (
-    <div className="flex h-full flex-col" role="tree" aria-label="File explorer">
+    <div className="flex h-full flex-col" role="tree" aria-label={t("fileExplorer.fileExplorer")}>
       <div className="flex items-center gap-0.5 px-2 py-1.5">
         <button
           type="button"
-          aria-label="New note"
+          aria-label={t("fileExplorer.newNote")}
           onClick={() => startCreate("note")}
           className="flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text"
         >
@@ -697,7 +701,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
         </button>
         <button
           type="button"
-          aria-label="New folder"
+          aria-label={t("fileExplorer.newFolder")}
           onClick={() => startCreate("folder")}
           className="flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text"
         >
@@ -707,7 +711,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              aria-label="Change sort order"
+              aria-label={t("fileExplorer.changeSort")}
               className="flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text"
             >
               <ArrowUpDown className="size-4" strokeWidth={1.75} />
@@ -729,7 +733,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
 
         <button
           type="button"
-          aria-label="Reveal active note"
+          aria-label={t("fileExplorer.revealActive")}
           title="Show the open note, collapse everything else"
           onClick={revealActive}
           disabled={!activeNoteId}
@@ -739,8 +743,8 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
         </button>
         <button
           type="button"
-          aria-label={allCollapsed ? "Expand all" : "Collapse all"}
-          title={allCollapsed ? "Expand all" : "Collapse all"}
+          aria-label={allCollapsed ? t("fileExplorer.expandAll") : t("fileExplorer.collapseAll")}
+          title={allCollapsed ? t("fileExplorer.expandAll") : t("fileExplorer.collapseAll")}
           onClick={toggleAll}
           disabled={allFolderIds.length === 0}
           className="flex size-6 items-center justify-center rounded text-ob-faint hover:bg-ob-hover hover:text-ob-text disabled:opacity-40 disabled:hover:bg-transparent"
@@ -754,7 +758,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-2 pb-4">
-        {!tree && <p className="px-2 py-1 text-[13px] text-ob-faint">Loading…</p>}
+        {!tree && <p className="px-2 py-1 text-[13px] text-ob-faint">{t("common.loading")}</p>}
         <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
           {virtualizer.getVirtualItems().map((vRow) => {
             const row = rows[vRow.index];
@@ -986,7 +990,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
                       onChange={(v) => setCreating({ ...creating, value: v })}
                       onSubmit={submitCreate}
                       onCancel={() => setCreating(null)}
-                      placeholder={creating.kind === "note" ? "Note name" : "Folder name"}
+                      placeholder={creating.kind === "note" ? t("fileExplorer.inlineInput.notePlaceholder") : t("fileExplorer.inlineInput.folderPlaceholder")}
                     />
                   </div>
                 )}
@@ -999,7 +1003,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
       {moving && (
         <PickerDialog
           title={`Move “${moving.title}” to…`}
-          emptyLabel="No folders match."
+          emptyLabel={t("fileExplorer.picker.noFolders")}
           items={[
             { id: null, label: "(vault root)" },
             ...allItems.folders.map((f) => ({ id: f.id, label: f.path })),
@@ -1011,7 +1015,7 @@ export function FileExplorer({ vaultId, activeNoteId, onOpenNote }: ExplorerProp
       {merging && (
         <PickerDialog
           title={`Merge “${merging.title}” into…`}
-          emptyLabel="No other notes match."
+          emptyLabel={t("fileExplorer.picker.noNotes")}
           items={allItems.notes
             .filter((n) => n.id !== merging.noteId)
             .map((n) => ({ id: n.id, label: n.path }))}

@@ -207,6 +207,7 @@ export const ja: Translations = {
     resizeSidebar: "サイドバーの幅を変更",
   },
   fileExplorer: {
+    fileExplorer: "ファイルエクスプローラー",
     newNote: "新規ノート",
     newFolder: "新規フォルダ",
     changeSort: "並び順を変更",

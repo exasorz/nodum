@@ -27,6 +27,7 @@ import { resolveNewNoteFolder } from "@/lib/new-note-location";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
 import type { PluginCommand } from "@/lib/plugins/types";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 export interface PaletteCommand {
@@ -74,6 +75,7 @@ export function CommandPalette({
   onRunPluginCommand,
   onOpenSettings,
 }: CommandPaletteProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const queryClient = useQueryClient();
   const open = useWorkspaceStore((s) => s.paletteOpen);
@@ -146,7 +148,7 @@ export function CommandPalette({
     const note = await activeNote();
     if (!note) return;
     await navigator.clipboard.writeText(note.path);
-    toast("Copied file path.", "info");
+    toast(t("commandPalette.toast.filePathCopied"), "info");
   };
 
   const bookmarkCurrent = async () => {
@@ -154,7 +156,7 @@ export function CommandPalette({
     await bookmarkApi.add(vaultId, activeTabId);
     void queryClient.invalidateQueries({ queryKey: ["bookmarks", vaultId] });
     void queryClient.invalidateQueries({ queryKey: ["bookmark", vaultId, activeTabId] });
-    toast("Bookmarked.", "info");
+    toast(t("commandPalette.toast.bookmarked"), "info");
   };
 
   const bookmarkAllTabs = async () => {
@@ -164,7 +166,7 @@ export function CommandPalette({
       .filter((t) => t.kind === "note");
     await Promise.all(noteTabs.map((t) => bookmarkApi.add(vaultId, t.id)));
     void queryClient.invalidateQueries({ queryKey: ["bookmarks", vaultId] });
-    toast(`Bookmarked ${noteTabs.length} note${noteTabs.length === 1 ? "" : "s"}.`, "info");
+    toast(t("commandPalette.toast.bookmarkedNTabs", { count: noteTabs.length, plural: noteTabs.length === 1 ? "" : "s" }), "info");
   };
 
   const newCanvas = async () => {
@@ -180,7 +182,7 @@ export function CommandPalette({
         await folderApi.create(vaultId, { name, parent_id: null });
         void queryClient.invalidateQueries({ queryKey: ["tree", vaultId] });
         useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "files" });
-        toast(`Created “${name}”.`, "info");
+        toast(t("commandPalette.toast.folderCreated", { name }), "info");
         return;
       } catch (e) {
         if (e instanceof ApiError && e.status === 409) continue;
@@ -222,31 +224,31 @@ export function CommandPalette({
   // Labels: "Category: action" (or plain for core actions), listed alphabetically;
   // cmdk re-ranks by relevance once you type.
   const commands: PaletteCommand[] = [
-    { id: "new-note", label: "Create new note", hotkey: "⌘N", run: onNewNote },
-    { id: "new-tab", label: "New tab", run: onNewNote },
-    { id: "create-note-right", label: "Create note to the right", run: guard(createNoteRight), needsNote: true },
-    { id: "duplicate-note", label: "Duplicate current file", run: guard(duplicateNote), needsNote: true },
-    { id: "delete-note", label: "Delete current note", run: onDeleteActiveNote, needsNote: true },
-    { id: "copy-path", label: "Copy file path", run: guard(copyNotePath), needsNote: true },
-    { id: "bookmark-note", label: "Bookmark current note", run: guard(bookmarkCurrent), needsNote: true },
-    { id: "bookmark-all", label: "Bookmark all tabs", run: guard(bookmarkAllTabs), needsTab: true },
-    { id: "daily-note", label: "Daily notes: Open today's daily note", run: onOpenDailyNote },
-    { id: "insert-template", label: "Insert template", run: onInsertTemplate, needsNote: true },
-    { id: "version-history", label: "Version history: Show version history", run: () => setVersionsOpen(true), needsNote: true },
-    { id: "new-canvas", label: "Canvas: Create new canvas", run: guard(newCanvas) },
-    { id: "new-folder", label: "Files: Create new folder", run: guard(newFolder) },
-    { id: "quick-switcher", label: "Quick switcher: Open quick switcher", hotkey: "⌘O", run: () => setSwitcherOpen(true) },
-    { id: "graph", label: "Graph view: Open graph view", hotkey: "⌘G", run: onOpenGraph },
-    { id: "local-graph", label: "Graph view: Open local graph", run: () => setRightPanel("local-graph"), needsNote: true },
-    { id: "search-files", label: "Search: Search in all files", run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "search" }) },
-    { id: "nav-back", label: "Navigate back", hotkey: "⌘[", run: () => useWorkspaceStore.getState().navigateBack() },
-    { id: "nav-forward", label: "Navigate forward", hotkey: "⌘]", run: () => useWorkspaceStore.getState().navigateForward() },
-    { id: "close-tab", label: "Close current tab", hotkey: "⌘W", run: onCloseActiveTab, needsTab: true },
-    { id: "close-others", label: "Close all other tabs", run: () => useWorkspaceStore.getState().closeOtherTabs(), needsTab: true },
-    { id: "close-group", label: "Close this tab group", run: () => useWorkspaceStore.getState().closePane(useWorkspaceStore.getState().activePane), needsTab: true },
-    { id: "next-tab", label: "Go to next tab", run: () => useWorkspaceStore.getState().goToRelativeTab(1), needsTab: true },
-    { id: "prev-tab", label: "Go to previous tab", run: () => useWorkspaceStore.getState().goToRelativeTab(-1), needsTab: true },
-    { id: "last-tab", label: "Go to last tab", hotkey: "⌘9", run: () => useWorkspaceStore.getState().goToTabIndex(-1), needsTab: true },
+    { id: "new-note", label: t("commandPalette.commands.newNote"), hotkey: "⌘N", run: onNewNote },
+    { id: "new-tab", label: t("commandPalette.commands.newTab"), run: onNewNote },
+    { id: "create-note-right", label: t("commandPalette.commands.createNoteRight"), run: guard(createNoteRight), needsNote: true },
+    { id: "duplicate-note", label: t("commandPalette.commands.duplicateCurrentFile"), run: guard(duplicateNote), needsNote: true },
+    { id: "delete-note", label: t("commandPalette.commands.deleteCurrentNote"), run: onDeleteActiveNote, needsNote: true },
+    { id: "copy-path", label: t("commandPalette.commands.copyFilePath"), run: guard(copyNotePath), needsNote: true },
+    { id: "bookmark-note", label: t("commandPalette.commands.bookmarkCurrentNote"), run: guard(bookmarkCurrent), needsNote: true },
+    { id: "bookmark-all", label: t("commandPalette.commands.bookmarkAllTabs"), run: guard(bookmarkAllTabs), needsTab: true },
+    { id: "daily-note", label: t("commandPalette.commands.openDailyNote"), run: onOpenDailyNote },
+    { id: "insert-template", label: t("commandPalette.commands.insertTemplate"), run: onInsertTemplate, needsNote: true },
+    { id: "version-history", label: t("commandPalette.commands.showVersionHistory"), run: () => setVersionsOpen(true), needsNote: true },
+    { id: "new-canvas", label: t("commandPalette.commands.newCanvas"), run: guard(newCanvas) },
+    { id: "new-folder", label: t("commandPalette.commands.newFolder"), run: guard(newFolder) },
+    { id: "quick-switcher", label: t("commandPalette.commands.openQuickSwitcher"), hotkey: "⌘O", run: () => setSwitcherOpen(true) },
+    { id: "graph", label: t("commandPalette.commands.openGraphView"), hotkey: "⌘G", run: onOpenGraph },
+    { id: "local-graph", label: t("commandPalette.commands.openLocalGraph"), run: () => setRightPanel("local-graph"), needsNote: true },
+    { id: "search-files", label: t("commandPalette.commands.searchAllFiles"), run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "search" }) },
+    { id: "nav-back", label: t("commandPalette.commands.navigateBack"), hotkey: "⌘[", run: () => useWorkspaceStore.getState().navigateBack() },
+    { id: "nav-forward", label: t("commandPalette.commands.navigateForward"), hotkey: "⌘]", run: () => useWorkspaceStore.getState().navigateForward() },
+    { id: "close-tab", label: t("commandPalette.commands.closeCurrentTab"), hotkey: "⌘W", run: onCloseActiveTab, needsTab: true },
+    { id: "close-others", label: t("commandPalette.commands.closeAllOtherTabs"), run: () => useWorkspaceStore.getState().closeOtherTabs(), needsTab: true },
+    { id: "close-group", label: t("commandPalette.commands.closeThisTabGroup"), run: () => useWorkspaceStore.getState().closePane(useWorkspaceStore.getState().activePane), needsTab: true },
+    { id: "next-tab", label: t("commandPalette.commands.goToNextTab"), run: () => useWorkspaceStore.getState().goToRelativeTab(1), needsTab: true },
+    { id: "prev-tab", label: t("commandPalette.commands.goToPreviousTab"), run: () => useWorkspaceStore.getState().goToRelativeTab(-1), needsTab: true },
+    { id: "last-tab", label: t("commandPalette.commands.goToLastTab"), hotkey: "⌘9", run: () => useWorkspaceStore.getState().goToTabIndex(-1), needsTab: true },
     ...Array.from({ length: 8 }, (_, i) => ({
       id: `tab-${i + 1}`,
       label: `Go to tab #${i + 1}`,
@@ -254,11 +256,11 @@ export function CommandPalette({
       run: () => useWorkspaceStore.getState().goToTabIndex(i),
       needsTab: true,
     })),
-    { id: "focus-right-pane", label: "Focus on tab group to the right", run: () => focusPane(1), needsTab: true },
-    { id: "focus-left-pane", label: "Focus on tab group to the left", run: () => focusPane(-1), needsTab: true },
+    { id: "focus-right-pane", label: t("commandPalette.commands.focusRightPane"), run: () => focusPane(1), needsTab: true },
+    { id: "focus-left-pane", label: t("commandPalette.commands.focusLeftPane"), run: () => focusPane(-1), needsTab: true },
     {
       id: "split-right",
-      label: "Split right",
+      label: t("commandPalette.commands.splitRight"),
       hotkey: "⌘\\",
       run: () => {
         const s = useWorkspaceStore.getState();
@@ -269,7 +271,7 @@ export function CommandPalette({
     },
     {
       id: "split-down",
-      label: "Split down",
+      label: t("commandPalette.commands.splitDown"),
       run: () => {
         const s = useWorkspaceStore.getState();
         s.setSplitOrientation("column");
@@ -277,41 +279,41 @@ export function CommandPalette({
       },
       needsNote: true,
     },
-    { id: "toggle-pin", label: "Toggle pin on current tab", run: () => activeTabId && useWorkspaceStore.getState().togglePin(activeTabId, activePane), needsTab: true },
-    { id: "mode-live", label: "Editor: Live Preview", run: () => setMode("live"), needsNote: true },
-    { id: "mode-source", label: "Editor: Source mode", run: () => setMode("source"), needsNote: true },
-    { id: "mode-reading", label: "Editor: Reading view", run: () => setMode("reading"), needsNote: true },
-    { id: "zoom-in", label: "Zoom in", run: () => zoom(1) },
-    { id: "zoom-out", label: "Zoom out", run: () => zoom(-1) },
-    { id: "zoom-reset", label: "Reset zoom", run: () => toggleSetting({ editorFontSize: EDITOR_SETTING_DEFAULTS.editorFontSize }) },
-    { id: "toggle-default-mode", label: "Toggle default mode for new tabs", run: cycleDefaultMode },
-    { id: "toggle-line-numbers", label: "Toggle line numbers", run: () => toggleSetting({ showLineNumbers: !editorPrefs.showLineNumbers }) },
-    { id: "toggle-spellcheck", label: "Toggle spellcheck", run: () => toggleSetting({ spellcheck: !editorPrefs.spellcheck }) },
-    { id: "toggle-readable-width", label: "Toggle readable line length", run: () => toggleSetting({ readableLineLength: !editorPrefs.readableLineLength }) },
-    { id: "show-backlinks", label: "Backlinks: Show backlinks for the current note", run: () => setRightPanel("backlinks"), needsNote: true },
-    { id: "show-outgoing", label: "Outgoing links: Show outgoing links", run: () => setRightPanel("outgoing"), needsNote: true },
-    { id: "show-outline", label: "Outline: Show outline of the current file", run: () => setRightPanel("outline"), needsNote: true },
-    { id: "show-tags", label: "Tags view: Show tags", run: () => setRightPanel("tags") },
-    { id: "show-ai", label: "AI: Open chat", run: () => setRightPanel("ai") },
-    { id: "help-tour", label: "Help: Show the tour again", run: () => useWorkspaceStore.getState().setTourOpen(true) },
-    { id: "help-docs", label: "Help: Open documentation", run: () => window.open(DOCS_URL, "_blank", "noopener,noreferrer") },
+    { id: "toggle-pin", label: t("commandPalette.commands.togglePin"), run: () => activeTabId && useWorkspaceStore.getState().togglePin(activeTabId, activePane), needsTab: true },
+    { id: "mode-live", label: t("commandPalette.commands.editorLivePreview"), run: () => setMode("live"), needsNote: true },
+    { id: "mode-source", label: t("commandPalette.commands.editorSourceMode"), run: () => setMode("source"), needsNote: true },
+    { id: "mode-reading", label: t("commandPalette.commands.editorReadingView"), run: () => setMode("reading"), needsNote: true },
+    { id: "zoom-in", label: t("commandPalette.commands.zoomIn"), run: () => zoom(1) },
+    { id: "zoom-out", label: t("commandPalette.commands.zoomOut"), run: () => zoom(-1) },
+    { id: "zoom-reset", label: t("commandPalette.commands.resetZoom"), run: () => toggleSetting({ editorFontSize: EDITOR_SETTING_DEFAULTS.editorFontSize }) },
+    { id: "toggle-default-mode", label: t("commandPalette.commands.toggleDefaultMode"), run: cycleDefaultMode },
+    { id: "toggle-line-numbers", label: t("commandPalette.commands.toggleLineNumbers"), run: () => toggleSetting({ showLineNumbers: !editorPrefs.showLineNumbers }) },
+    { id: "toggle-spellcheck", label: t("commandPalette.commands.toggleSpellcheck"), run: () => toggleSetting({ spellcheck: !editorPrefs.spellcheck }) },
+    { id: "toggle-readable-width", label: t("commandPalette.commands.toggleReadableWidth"), run: () => toggleSetting({ readableLineLength: !editorPrefs.readableLineLength }) },
+    { id: "show-backlinks", label: t("commandPalette.commands.showBacklinks"), run: () => setRightPanel("backlinks"), needsNote: true },
+    { id: "show-outgoing", label: t("commandPalette.commands.showOutgoingLinks"), run: () => setRightPanel("outgoing"), needsNote: true },
+    { id: "show-outline", label: t("commandPalette.commands.showOutline"), run: () => setRightPanel("outline"), needsNote: true },
+    { id: "show-tags", label: t("commandPalette.commands.showTags"), run: () => setRightPanel("tags") },
+    { id: "show-ai", label: t("commandPalette.commands.openAiChat"), run: () => setRightPanel("ai") },
+    { id: "help-tour", label: t("commandPalette.commands.showTour"), run: () => useWorkspaceStore.getState().setTourOpen(true) },
+    { id: "help-docs", label: t("commandPalette.commands.openDocs"), run: () => window.open(DOCS_URL, "_blank", "noopener,noreferrer") },
     {
       id: "ai-settings",
-      label: "AI: Configure provider and API key",
+      label: t("commandPalette.commands.aiSettings"),
       run: () => useWorkspaceStore.getState().openSettings("AI"),
     },
-    { id: "toggle-left", label: "Toggle left sidebar", run: toggleLeft },
-    { id: "toggle-right", label: "Toggle right sidebar", run: toggleRight },
-    { id: "toggle-ribbon", label: "Toggle ribbon", run: () => toggleSetting({ showRibbon: !parseUserPrefs(user?.settings).showRibbon }) },
-    { id: "show-file-explorer", label: "Files: Show file explorer", run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "files" }) },
-    { id: "show-bookmarks", label: "Bookmarks: Show bookmarks", run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "bookmarks" }) },
-    { id: "settings", label: "Open settings", hotkey: "⌘,", run: onOpenSettings },
+    { id: "toggle-left", label: t("commandPalette.commands.toggleLeftSidebar"), run: toggleLeft },
+    { id: "toggle-right", label: t("commandPalette.commands.toggleRightSidebar"), run: toggleRight },
+    { id: "toggle-ribbon", label: t("commandPalette.commands.toggleRibbon"), run: () => toggleSetting({ showRibbon: !parseUserPrefs(user?.settings).showRibbon }) },
+    { id: "show-file-explorer", label: t("commandPalette.commands.showFileExplorer"), run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "files" }) },
+    { id: "show-bookmarks", label: t("commandPalette.commands.showBookmarks"), run: () => useWorkspaceStore.setState({ leftSidebarOpen: true, leftPane: "bookmarks" }) },
+    { id: "settings", label: t("commandPalette.commands.openSettings"), hotkey: "⌘,", run: onOpenSettings },
     // First, and worded for what people search for — "import" is how
     // someone arriving from another app describes what they want.
-    { id: "import-data", label: "Import data from another app…", run: onOpenImport },
-    { id: "export-vault", label: "Export vault as a zip", run: onExportVault },
-    { id: "import-vault", label: "Import notes from a zip", run: onImportVault },
-    { id: "import-folder", label: "Import a vault folder…", run: onImportFolder },
+    { id: "import-data", label: t("commandPalette.commands.importData"), run: onOpenImport },
+    { id: "export-vault", label: t("commandPalette.commands.exportVault"), run: onExportVault },
+    { id: "import-vault", label: t("commandPalette.commands.importVault"), run: onImportVault },
+    { id: "import-folder", label: t("commandPalette.commands.importFolder"), run: onImportFolder },
     // Plugin-contributed commands, namespaced so a plugin can't shadow a core one
     ...pluginCommands.map((c) => ({
       id: `plugin:${c.pluginId}:${c.commandId}`,
@@ -322,13 +324,13 @@ export function CommandPalette({
       // router.push("/vault") used to bounce straight back here: the dispatcher
       // resolves to the vault you are already in. Send people to the list.
       id: "switch-vault",
-      label: "Change vault…",
+      label: t("commandPalette.commands.changeVault"),
       run: () => useWorkspaceStore.getState().openSettings("Vault"),
     },
-    { id: "reload", label: "Reload app without saving", run: () => window.location.reload() },
+    { id: "reload", label: t("commandPalette.commands.reloadApp"), run: () => window.location.reload() },
     {
       id: "logout",
-      label: "Log out",
+      label: t("commandPalette.commands.logOut"),
       run: async () => {
         await logout();
         router.replace("/");
@@ -342,18 +344,18 @@ export function CommandPalette({
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      title="Command palette"
-      description="Run a command"
+      title={t("commandPalette.title")}
+      description={t("commandPalette.description")}
       className="border border-ob-border bg-[var(--ob-color-base-25)] shadow-2xl sm:max-w-[720px]"
     >
       <Command>
         <CommandInput
-          placeholder="Select a command..."
+          placeholder={t("commandPalette.placeholder")}
           showSearchIcon={false}
           onClose={() => setOpen(false)}
         />
         <CommandList className="max-h-[min(60vh,560px)]">
-          <CommandEmpty>No matching commands.</CommandEmpty>
+          <CommandEmpty>{t("commandPalette.empty")}</CommandEmpty>
           {commands.map((c) => (
             <CommandItem
               key={c.id}
