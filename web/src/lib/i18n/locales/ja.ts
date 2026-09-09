@@ -171,6 +171,9 @@ export const ja: Translations = {
       collabSaveFailed: "コラボレーション設定を更新できませんでした。",
     },
   },
+  noteMenu: {
+    moved: "移動しました", moveFailed: "ノートを移動できませんでした。", merged: "結合しました", mergeFailed: "ノートを結合できませんでした。", bookmarkRemoved: "ブックマークを解除しました", bookmarked: "ブックマークしました", bookmarkFailed: "ブックマークを更新できませんでした。", noteDeleted: "ノートを削除しました", deleteFailed: "ノートを削除できませんでした。", pathCopied: "パスをコピーしました", copyPathFailed: "パスをコピーできませんでした", moreOptions: "その他の操作", backlinksHide: "文書内のバックリンクを隠す", backlinksShow: "文書内のバックリンク", readingView: "閲覧ビュー", sourceMode: "ソースモード", openNewWindow: "新しいウィンドウで開く", moveFile: "ファイルを移動…", mergeFile: "ファイルを結合…", exportPdf: "PDFにエクスポート…", find: "検索…", replace: "置換…", copyPath: "パスをコピー", versionHistory: "変更履歴を開く", linkedView: "リンクビューを開く", revealNavigation: "ナビゲーションで表示", vaultRoot: "Vaultのルート", noFolders: "フォルダがありません。", noNotes: "他のノートがありません。",
+  },
   editorMenu: {
     addLink: "リンクを追加",
     addExternalLink: "外部リンクを追加",

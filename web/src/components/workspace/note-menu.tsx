@@ -28,6 +28,7 @@ import { bookmarkApi, noteApi, vaultApi } from "@/lib/api/endpoints";
 import type { Note, TreeItem } from "@/lib/api/types";
 import { addFileProperty } from "@/lib/editor/format-commands";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 import { confirmDelete } from "./confirm-dialog";
 import { PickerDialog } from "./picker-dialog";
@@ -69,6 +70,7 @@ export function NoteMenu({
   backlinksInDocument: boolean;
   onToggleBacklinksInDocument: () => void;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const toast = useToastStore((s) => s.push);
   const setMode = useWorkspaceStore((s) => s.setEditorMode);
@@ -112,9 +114,9 @@ export function NoteMenu({
     onSuccess: () => {
       invalidate();
       void queryClient.invalidateQueries({ queryKey: ["note", vaultId, note.id] });
-      toast("Moved");
+      toast(t("noteMenu.moved"));
     },
-    onError: (e) => toastError(e, "Could not move the note."),
+    onError: (e) => toastError(e, t("noteMenu.moveFailed")),
   });
 
   const merge = useMutation({
@@ -131,9 +133,9 @@ export function NoteMenu({
       closeTab(sourceId);
       invalidate();
       void queryClient.invalidateQueries({ queryKey: ["note", vaultId, note.id] });
-      toast("Merged");
+      toast(t("noteMenu.merged"));
     },
-    onError: (e) => toastError(e, "Could not merge the notes."),
+    onError: (e) => toastError(e, t("noteMenu.mergeFailed")),
   });
 
   const toggleBookmark = useMutation({
@@ -141,9 +143,9 @@ export function NoteMenu({
       isBookmarked ? bookmarkApi.remove(vaultId, note.id) : bookmarkApi.add(vaultId, note.id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["bookmarks", vaultId] });
-      toast(isBookmarked ? "Bookmark removed" : "Bookmarked");
+      toast(isBookmarked ? t("noteMenu.bookmarkRemoved") : t("noteMenu.bookmarked"));
     },
-    onError: (e) => toastError(e, "Could not update the bookmark."),
+    onError: (e) => toastError(e, t("noteMenu.bookmarkFailed")),
   });
 
   const remove = useMutation({
@@ -151,9 +153,9 @@ export function NoteMenu({
     onSuccess: () => {
       closeTab(note.id);
       invalidate();
-      toast("Note deleted");
+      toast(t("noteMenu.noteDeleted"));
     },
-    onError: (e) => toastError(e, "Could not delete the note."),
+    onError: (e) => toastError(e, t("noteMenu.deleteFailed")),
   });
 
   /** Run a command against the live editor, then hand focus back to it.
@@ -217,9 +219,9 @@ export function NoteMenu({
   const copyPath = async () => {
     try {
       await navigator.clipboard.writeText(note.path);
-      toast("Path copied");
+      toast(t("noteMenu.pathCopied"));
     } catch {
-      toast("Could not copy the path");
+      toast(t("noteMenu.copyPathFailed"));
     }
   };
 
@@ -257,7 +259,7 @@ export function NoteMenu({
               </button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent side="bottom">More options</TooltipContent>
+          <TooltipContent side="bottom">{t("noteMenu.moreOptions")}</TooltipContent>
         </Tooltip>
 
         <DropdownMenuContent
@@ -272,8 +274,8 @@ export function NoteMenu({
           <DropdownMenuItem onSelect={onToggleBacklinksInDocument}>
             {backlinksInDocument ? "Hide backlinks in document" : "Backlinks in document"}
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setMode("reading")}>Reading view</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setMode("source")}>Source mode</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setMode("reading")}>{t("noteMenu.readingView")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setMode("source")}>{t("noteMenu.sourceMode")}</DropdownMenuItem>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
@@ -292,7 +294,7 @@ export function NoteMenu({
           >
             Split down
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={openInNewWindow}>Open in new window</DropdownMenuItem>
+          <DropdownMenuItem onSelect={openInNewWindow}>{t("noteMenu.openNewWindow")}</DropdownMenuItem>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
@@ -305,23 +307,23 @@ export function NoteMenu({
           >
             Rename…
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setPicker("move")}>Move file to…</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setPicker("move")}>{t("noteMenu.moveFile")}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => toggleBookmark.mutate()}>
             {isBookmarked ? "Remove bookmark" : "Bookmark"}
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setPicker("merge")}>Merge entire file with…</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setPicker("merge")}>{t("noteMenu.mergeFile")}</DropdownMenuItem>
           <DropdownMenuItem onSelect={inEditor((v) => addFileProperty(v))}>
             Add file property
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToPdf}>Export to PDF…</DropdownMenuItem>
+          <DropdownMenuItem onSelect={exportToPdf}>{t("noteMenu.exportPdf")}</DropdownMenuItem>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem onSelect={openSearch("search")}>Find…</DropdownMenuItem>
-          <DropdownMenuItem onSelect={openSearch("replace")}>Replace…</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => void copyPath()}>Copy path</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setVersionsOpen(true)}>Open version history</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => showPanel("outgoing")}>Open linked view</DropdownMenuItem>
-          <DropdownMenuItem onSelect={revealInNavigation}>Reveal file in navigation</DropdownMenuItem>
+          <DropdownMenuItem onSelect={openSearch("search")}>{t("noteMenu.find")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={openSearch("replace")}>{t("noteMenu.replace")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => void copyPath()}>{t("noteMenu.copyPath")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setVersionsOpen(true)}>{t("noteMenu.versionHistory")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => showPanel("outgoing")}>{t("noteMenu.linkedView")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={revealInNavigation}>{t("noteMenu.revealNavigation")}</DropdownMenuItem>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem variant="destructive" onSelect={() => void del()}>
@@ -332,8 +334,8 @@ export function NoteMenu({
 
       {picker === "move" && (
         <PickerDialog
-          title="Move file to…"
-          items={[{ id: null, label: "Vault root" }, ...picked.folders]}
+          title={t("noteMenu.moveFile")}
+          items={[{ id: null, label: t("noteMenu.vaultRoot") }, ...picked.folders]}
           emptyLabel="No folders yet."
           onPick={(id) => {
             setPicker(null);
@@ -344,7 +346,7 @@ export function NoteMenu({
       )}
       {picker === "merge" && (
         <PickerDialog
-          title="Merge entire file with…"
+          title={t("noteMenu.mergeFile")}
           items={picked.notes.filter((n) => n.id !== note.id)}
           emptyLabel="No other notes."
           onPick={(id) => {
