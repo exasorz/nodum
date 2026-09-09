@@ -1,11 +1,9 @@
 "use client";
 
-import type { ChangeEvent } from "react";
-
 import { useTranslation, type Locale } from "@/lib/i18n";
 
 type LocaleOption = {
-  value: "en" | "ja";
+  value: Locale;
   label: string;
 };
 
@@ -17,28 +15,26 @@ const OPTIONS: LocaleOption[] = [
 export function LanguageSelector() {
   const { locale, setLocale } = useTranslation();
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const next = event.target.value;
-    if (next === "en" || next === "ja") setLocale(next as Locale);
-  };
-
   return (
-    <div className="flex items-center justify-between gap-4">
-      <span className="text-[13px] text-ob-muted">
-        {OPTIONS.find((o) => o.value === locale)?.label ?? locale}
-      </span>
-      <select
-        value={locale}
-        onChange={handleChange}
-        aria-label="Language"
-        className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
-      >
-        {OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
+    <div className="flex items-center gap-1 rounded-md border border-ob-border bg-ob-primary p-1">
+      {OPTIONS.map((option) => {
+        const selected = option.value === locale;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={selected}
+            onClick={() => setLocale(option.value)}
+            className={
+              selected
+                ? "rounded px-2.5 py-1 text-[13px] text-ob-text bg-ob-active"
+                : "rounded px-2.5 py-1 text-[13px] text-ob-muted hover:bg-ob-hover hover:text-ob-text"
+            }
+          >
             {option.label}
-          </option>
-        ))}
-      </select>
+          </button>
+        );
+      })}
     </div>
   );
 }
