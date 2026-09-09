@@ -18,6 +18,7 @@ import { PickerDialog } from "@/components/workspace/picker-dialog";
 import { attachmentApi, vaultApi } from "@/lib/api/endpoints";
 import type { TreeItem } from "@/lib/api/types";
 import { toastError, useToastStore } from "@/lib/stores/toast-store";
+import { useTranslation } from "@/lib/i18n";
 import { useWorkspaceStore } from "@/lib/stores/workspace-store";
 
 import {
@@ -117,7 +118,7 @@ function UrlDialog({ onSubmit, onClose }: { onSubmit: (url: string) => void; onC
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-[14px]">Add external link</DialogTitle>
+          <DialogTitle className="text-[14px]">{t("editorMenu.addExternalLink")}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -129,7 +130,7 @@ function UrlDialog({ onSubmit, onClose }: { onSubmit: (url: string) => void; onC
           <input
             autoFocus
             value={url}
-            aria-label="Link URL"
+            aria-label={t("editorMenu.linkUrl")}
             onChange={(e) => setUrl(e.target.value)}
             onFocus={(e) => e.currentTarget.setSelectionRange(url.length, url.length)}
             className="h-8 w-full rounded border border-ob-border bg-ob-bg px-2 text-[13px] text-ob-text outline-none placeholder:text-ob-faint focus:border-ob-accent"
@@ -238,6 +239,7 @@ export function EditorContextMenu({
   actions?: EditorContextMenuActions;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   const toast = useToastStore((s) => s.push);
   const setLeftPane = useWorkspaceStore((s) => s.setLeftPane);
   const setSearchSeed = useWorkspaceStore((s) => s.setSearchSeed);
@@ -307,7 +309,7 @@ export function EditorContextMenu({
       insertTextAtSelection(plain ? toPlainText(text) : text)(view);
       view.focus();
     } catch {
-      toast("The browser would not let the editor read the clipboard — use ⌘V.");
+      toast(t("editorMenu.clipboardRead"));
     }
   };
 
@@ -319,7 +321,7 @@ export function EditorContextMenu({
       if (cut) deleteSelection(view);
       view.focus();
     } catch (e) {
-      toastError(e, "Could not write to the clipboard.");
+      toastError(e, t("editorMenu.clipboardWrite"));
     }
   };
 
@@ -338,10 +340,10 @@ export function EditorContextMenu({
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-60">
         {/* 1 — what you do with the words you just selected. */}
-        <Item label="Add link" onSelect={() => setLinking("note")} />
-        <Item label="Add external link" onSelect={() => setLinking("url")} />
+        <Item label={t("editorMenu.addLink")} onSelect={() => setLinking("note")} />
+        <Item label={t("editorMenu.addExternalLink")} onSelect={() => setLinking("url")} />
         <Item
-          label={word ? `Search for “${shortWord}”` : "Search for…"}
+          label={word ? t("editorMenu.searchFor", { word: shortWord }) : t("editorMenu.searchForEmpty")}
           disabled={!word}
           onSelect={searchSelection}
         />
@@ -350,39 +352,39 @@ export function EditorContextMenu({
 
         {/* 2 — formatting. */}
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Format</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.format") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-56">
-            <ToggleItem label="Bold" checked={f.bold} onSelect={run(toggleBold)} shortcut="⌘B" />
-            <ToggleItem label="Italic" checked={f.italic} onSelect={run(toggleItalic)} shortcut="⌘I" />
+            <ToggleItem label={t("editorMenu.bold")} checked={f.bold} onSelect={run(toggleBold)} shortcut="⌘B" />
+            <ToggleItem label={t("editorMenu.italic")} checked={f.italic} onSelect={run(toggleItalic)} shortcut="⌘I" />
             <ToggleItem
-              label="Underline"
+              label={t("editorMenu.underline")}
               checked={f.underline}
               onSelect={run(toggleUnderline)}
               shortcut="⌘U"
             />
             <ToggleItem
-              label="Strikethrough"
+              label={t("editorMenu.strikethrough")}
               checked={f.strikethrough}
               onSelect={run(toggleStrikethrough)}
             />
             <ToggleItem
-              label="Highlight"
+              label={t("editorMenu.highlight")}
               checked={f.highlight}
               onSelect={run(toggleHighlightCmd)}
               shortcut="⌘⇧H"
             />
             <ContextMenuSeparator />
-            <Item label="Superscript" onSelect={run(toggleSuperscript)} />
-            <Item label="Subscript" onSelect={run(toggleSubscript)} />
-            <ToggleItem label="Inline code" checked={f.code} onSelect={run(toggleInlineCode)} />
-            <Item label="Code block" onSelect={run(insertCodeBlock)} />
+            <Item label={t("editorMenu.superscript")} onSelect={run(toggleSuperscript)} />
+            <Item label={t("editorMenu.subscript")} onSelect={run(toggleSubscript)} />
+            <ToggleItem label={t("editorMenu.inlineCode")} checked={f.code} onSelect={run(toggleInlineCode)} />
+            <Item label={t("editorMenu.codeBlock")} onSelect={run(insertCodeBlock)} />
             <ContextMenuSeparator />
-            <Item label="Clear formatting" onSelect={run(clearFormatting)} />
+            <Item label={t("editorMenu.clearFormatting")} onSelect={run(clearFormatting)} />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Text colour</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.textColour") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-44">
             {TEXT_COLORS.map((c) => (
               <ColorItem key={c.value} name={c.name} value={c.value} onSelect={run(setTextColor(c.value))} />
@@ -391,7 +393,7 @@ export function EditorContextMenu({
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Highlight colour</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.highlightColour") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-44">
             {TEXT_COLORS.map((c) => (
               <ColorItem
@@ -405,14 +407,14 @@ export function EditorContextMenu({
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Paragraph</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.paragraph") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-52">
-            <ToggleItem label="Plain text" checked={f.heading === 0} onSelect={run(setHeading(0))} />
+            <ToggleItem label={t("editorMenu.plainText")} checked={f.heading === 0} onSelect={run(setHeading(0))} />
             <ContextMenuSeparator />
             {([1, 2, 3, 4, 5, 6] as const).map((level) => (
               <ToggleItem
                 key={level}
-                label={`Heading ${String(level)}`}
+                label={t("editorMenu.heading", { level })}
                 checked={f.heading === level}
                 shortcut={`⌘${String(level)}`}
                 onSelect={run(setHeading(level))}
@@ -422,45 +424,45 @@ export function EditorContextMenu({
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Lists</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.lists") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-52">
-            <ToggleItem label="Bullet list" checked={f.bulletList} onSelect={run(toggleBulletList)} />
+            <ToggleItem label={t("editorMenu.bulletList")} checked={f.bulletList} onSelect={run(toggleBulletList)} />
             <ToggleItem
-              label="Numbered list"
+              label={t("editorMenu.numberedList")}
               checked={f.numberedList}
               onSelect={run(toggleNumberedList)}
             />
-            <ToggleItem label="Task list" checked={f.taskList} onSelect={run(toggleTaskList)} />
-            <Item label="Toggle checkbox" onSelect={run(toggleCheckbox)} shortcut="⌘⏎" />
+            <ToggleItem label={t("editorMenu.taskList")} checked={f.taskList} onSelect={run(toggleTaskList)} />
+            <Item label={t("editorMenu.toggleCheckbox")} onSelect={run(toggleCheckbox)} shortcut="⌘⏎" />
             <ContextMenuSeparator />
-            <ToggleItem label="Blockquote" checked={f.quote} onSelect={run(toggleBlockquote)} />
+            <ToggleItem label={t("editorMenu.blockquote")} checked={f.quote} onSelect={run(toggleBlockquote)} />
             <ContextMenuSeparator />
-            <Item label="Indent" onSelect={run(indentLines)} shortcut="⇥" />
-            <Item label="Outdent" onSelect={run(outdentLines)} shortcut="⇧⇥" />
+            <Item label={t("editorMenu.indent")} onSelect={run(indentLines)} shortcut="⇥" />
+            <Item label={t("editorMenu.outdent")} onSelect={run(outdentLines)} shortcut="⇧⇥" />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Insert</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.insert") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-56">
-            <Item label="Link" onSelect={run(insertLink)} shortcut="⌘K" />
-            <Item label="Wikilink" onSelect={run(insertWikilink)} shortcut="[[" />
-            <Item label="Embed" onSelect={run(insertEmbed)} />
-            <Item label="Tag" onSelect={run(insertTag)} />
+            <Item label={t("editorMenu.link")} onSelect={run(insertLink)} shortcut="⌘K" />
+            <Item label={t("editorMenu.wikilink")} onSelect={run(insertWikilink)} shortcut="[[" />
+            <Item label={t("editorMenu.embed")} onSelect={run(insertEmbed)} />
+            <Item label={t("editorMenu.tag")} onSelect={run(insertTag)} />
             <ContextMenuSeparator />
-            <Item label="Table" onSelect={run(insertTable())} />
-            <Item label="Horizontal rule" onSelect={run(insertHorizontalRule)} />
-            <Item label="Footnote" onSelect={run(insertFootnote)} />
-            <Item label="Math block" onSelect={run(insertMathBlock)} />
-            <Item label="Mermaid diagram" onSelect={run(insertMermaid)} />
+            <Item label={t("editorMenu.table")} onSelect={run(insertTable())} />
+            <Item label={t("editorMenu.horizontalRule")} onSelect={run(insertHorizontalRule)} />
+            <Item label={t("editorMenu.footnote")} onSelect={run(insertFootnote)} />
+            <Item label={t("editorMenu.mathBlock")} onSelect={run(insertMathBlock)} />
+            <Item label={t("editorMenu.mermaid")} onSelect={run(insertMermaid)} />
             <ContextMenuSeparator />
-            <Item label="Today's date" onSelect={run(insertDate)} />
-            <Item label="Current time" onSelect={run(insertTime)} />
+            <Item label={t("editorMenu.todaysDate")} onSelect={run(insertDate)} />
+            <Item label={t("editorMenu.currentTime")} onSelect={run(insertTime)} />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Callout</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.callout") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="max-h-80 w-44 overflow-y-auto">
             {CALLOUT_TYPES.map((type) => (
               <ContextMenuItem key={type} onSelect={run(insertCalloutOfType(type))} className="capitalize">
@@ -474,62 +476,62 @@ export function EditorContextMenu({
           {/* Never gated: "Table" is where people look to CREATE one. Gating the
               whole group made the obvious entry point dead. Only the operations
               that need an existing table are disabled. */}
-          <ContextMenuSubTrigger>Table</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.table") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-56">
-            <Item label="Insert table" onSelect={run(insertTable())} />
+            <Item label={t("editorMenu.insertTable")} onSelect={run(insertTable())} />
             <ContextMenuSeparator />
-            <Item label="Insert row above" disabled={!ctx.inTable} onSelect={run(tableInsertRowAbove)} />
-            <Item label="Insert row below" disabled={!ctx.inTable} onSelect={run(tableInsertRowBelow)} />
-            <Item label="Move row up" disabled={!ctx.inTable} onSelect={run(tableMoveRowUp)} shortcut="⌥↑" />
-            <Item label="Move row down" disabled={!ctx.inTable} onSelect={run(tableMoveRowDown)} shortcut="⌥↓" />
-            <Item label="Delete row" disabled={!ctx.inTable} onSelect={run(tableDeleteRow)} />
+            <Item label={t("editorMenu.insertRowAbove")} disabled={!ctx.inTable} onSelect={run(tableInsertRowAbove)} />
+            <Item label={t("editorMenu.insertRowBelow")} disabled={!ctx.inTable} onSelect={run(tableInsertRowBelow)} />
+            <Item label={t("editorMenu.moveRowUp")} disabled={!ctx.inTable} onSelect={run(tableMoveRowUp)} shortcut="⌥↑" />
+            <Item label={t("editorMenu.moveRowDown")} disabled={!ctx.inTable} onSelect={run(tableMoveRowDown)} shortcut="⌥↓" />
+            <Item label={t("editorMenu.deleteRow")} disabled={!ctx.inTable} onSelect={run(tableDeleteRow)} />
             <ContextMenuSeparator />
-            <Item label="Insert column left" disabled={!ctx.inTable} onSelect={run(tableInsertColumnLeft)} />
-            <Item label="Insert column right" disabled={!ctx.inTable} onSelect={run(tableInsertColumnRight)} />
-            <Item label="Delete column" disabled={!ctx.inTable} onSelect={run(tableDeleteColumn)} />
+            <Item label={t("editorMenu.insertColumnLeft")} disabled={!ctx.inTable} onSelect={run(tableInsertColumnLeft)} />
+            <Item label={t("editorMenu.insertColumnRight")} disabled={!ctx.inTable} onSelect={run(tableInsertColumnRight)} />
+            <Item label={t("editorMenu.deleteColumn")} disabled={!ctx.inTable} onSelect={run(tableDeleteColumn)} />
             <ContextMenuSeparator />
-            <Item label="Align left" disabled={!ctx.inTable} onSelect={run(tableAlignColumn("left"))} />
-            <Item label="Align centre" disabled={!ctx.inTable} onSelect={run(tableAlignColumn("center"))} />
-            <Item label="Align right" disabled={!ctx.inTable} onSelect={run(tableAlignColumn("right"))} />
+            <Item label={t("editorMenu.alignLeft")} disabled={!ctx.inTable} onSelect={run(tableAlignColumn("left"))} />
+            <Item label={t("editorMenu.alignCentre")} disabled={!ctx.inTable} onSelect={run(tableAlignColumn("center"))} />
+            <Item label={t("editorMenu.alignRight")} disabled={!ctx.inTable} onSelect={run(tableAlignColumn("right"))} />
             <ContextMenuSeparator />
-            <Item label="Sort column A → Z" disabled={!ctx.inTable} onSelect={run(tableSortByColumn("asc"))} />
-            <Item label="Sort column Z → A" disabled={!ctx.inTable} onSelect={run(tableSortByColumn("desc"))} />
-            <Item label="Format table" disabled={!ctx.inTable} onSelect={run(tableFormat)} />
+            <Item label={t("editorMenu.sortColumnAsc")} disabled={!ctx.inTable} onSelect={run(tableSortByColumn("asc"))} />
+            <Item label={t("editorMenu.sortColumnDesc")} disabled={!ctx.inTable} onSelect={run(tableSortByColumn("desc"))} />
+            <Item label={t("editorMenu.formatTable")} disabled={!ctx.inTable} onSelect={run(tableFormat)} />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger disabled={!ctx.hasSelection}>Sort &amp; filter lines</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger disabled={!ctx.hasSelection}>{t("editorMenu.sortFilterLines")}</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-52">
-            <Item label="Sort A → Z" onSelect={run(sortLinesAsc)} />
-            <Item label="Sort Z → A" onSelect={run(sortLinesDesc)} />
-            <Item label="Reverse" onSelect={run(reverseLines)} />
+            <Item label={t("editorMenu.sortAsc")} onSelect={run(sortLinesAsc)} />
+            <Item label={t("editorMenu.sortDesc")} onSelect={run(sortLinesDesc)} />
+            <Item label={t("editorMenu.reverse")} onSelect={run(reverseLines)} />
             <ContextMenuSeparator />
-            <Item label="Remove duplicates" onSelect={run(dedupeLines)} />
-            <Item label="Join into one line" onSelect={run(joinLines)} />
+            <Item label={t("editorMenu.removeDuplicates")} onSelect={run(dedupeLines)} />
+            <Item label={t("editorMenu.joinLine")} onSelect={run(joinLines)} />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
         <ContextMenuSeparator />
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger>Properties</ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>{t("editorMenu.properties") }</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-52">
-            <Item label="Add file property" onSelect={run(addFileProperty)} />
+            <Item label={t("editorMenu.addFileProperty")} onSelect={run(addFileProperty)} />
           </ContextMenuSubContent>
         </ContextMenuSub>
 
-        {actions?.onNewNote && <Item label="New note" onSelect={actions.onNewNote} shortcut="⌘N" />}
+        {actions?.onNewNote && <Item label={t("editorMenu.newNote")} onSelect={actions.onNewNote} shortcut="⌘N" />}
         {actions?.onExtractSelection && (
           <Item
-            label="New note from selection"
+            label={t("editorMenu.newNoteSelection")}
             disabled={!ctx.hasSelection}
             onSelect={() => actions.onExtractSelection?.(ctx.selected)}
           />
         )}
 
         <Item
-          label="Find…"
+          label={t("editorMenu.find")}
           shortcut="⌘F"
           onSelect={() => {
             const view = getView();
@@ -540,10 +542,10 @@ export function EditorContextMenu({
         <ContextMenuSeparator />
 
         {/* 3 — clipboard. */}
-        <Item label="Cut" shortcut="⌘X" disabled={!ctx.hasSelection} onSelect={() => void copy(true)()} />
-        <Item label="Copy" shortcut="⌘C" disabled={!ctx.hasSelection} onSelect={() => void copy(false)()} />
-        <Item label="Paste" shortcut="⌘V" onSelect={() => void paste(false)()} />
-        <Item label="Paste in plain text" shortcut="⌘⇧V" onSelect={() => void paste(true)()} />
+        <Item label={t("editorMenu.cut")} shortcut="⌘X" disabled={!ctx.hasSelection} onSelect={() => void copy(true)()} />
+        <Item label={t("editorMenu.copy")} shortcut="⌘C" disabled={!ctx.hasSelection} onSelect={() => void copy(false)()} />
+        <Item label={t("editorMenu.paste")} shortcut="⌘V" onSelect={() => void paste(false)()} />
+        <Item label={t("editorMenu.pastePlain")} shortcut="⌘⇧V" onSelect={() => void paste(true)()} />
         <ContextMenuItem
           onSelect={() => {
             const view = getView();
@@ -552,16 +554,16 @@ export function EditorContextMenu({
             view.focus();
           }}
         >
-          Select all
+          {t("editorMenu.selectAll")}
           <ContextMenuShortcut>⌘A</ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>
 
       {linking === "note" && (
         <PickerDialog
-          title="Link to a note or file"
+          title={t("editorMenu.linkPickerTitle")}
           items={linkTargets}
-          emptyLabel="Nothing to link to yet."
+          emptyLabel={t("editorMenu.nothingToLink")}
           onPick={(id) => {
             setLinking(null);
             const view = getView();
