@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 
 import { en } from "./locales/en";
 import { ja } from "./locales/ja";
@@ -42,16 +42,19 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const setLocale = (next: Locale) => {
+  const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
+  }, []);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem(STORAGE_KEY, locale);
     }
-  };
+  }, [locale]);
 
   const value = useMemo(
     () => ({ locale, setLocale, translations: LOCALES[locale] }),
-    [locale],
+    [locale, setLocale],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

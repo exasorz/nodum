@@ -1,6 +1,8 @@
 "use client";
 
-import { useTranslation } from "@/lib/i18n";
+import type { ChangeEvent } from "react";
+
+import { useTranslation, type Locale } from "@/lib/i18n";
 
 type LocaleOption = {
   value: "en" | "ja";
@@ -15,12 +17,20 @@ const OPTIONS: LocaleOption[] = [
 export function LanguageSelector() {
   const { locale, setLocale } = useTranslation();
 
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const next = event.target.value;
+    if (next === "en" || next === "ja") setLocale(next as Locale);
+  };
+
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className="text-[13px] text-ob-muted">{OPTIONS.find((o) => o.value === locale)?.label ?? locale}</span>
+      <span className="text-[13px] text-ob-muted">
+        {OPTIONS.find((o) => o.value === locale)?.label ?? locale}
+      </span>
       <select
         value={locale}
-        onChange={(e) => setLocale(e.target.value as "en" | "ja")}
+        onChange={handleChange}
+        aria-label="Language"
         className="rounded-md border border-ob-border bg-ob-primary px-2 py-1 text-[13px] text-ob-text"
       >
         {OPTIONS.map((option) => (
